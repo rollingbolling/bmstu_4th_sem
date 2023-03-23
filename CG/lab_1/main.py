@@ -1,10 +1,11 @@
 from Point import *
-
+from math import sqrt
 from tkinter import Tk, Canvas, Label, Entry, Button, messagebox, Listbox, LAST
 
 window = Tk()
-WINDOW_W = window.winfo_screenwidth()
-WINDOW_H = window.winfo_screenheight() - 70
+SCALE_CONST = 200
+WINDOW_W = window.winfo_screenwidth() - SCALE_CONST
+WINDOW_H = window.winfo_screenheight() - 70 - SCALE_CONST
 AXIS_SPACE = 10
 
 CANVAS_X = WINDOW_W
@@ -13,24 +14,46 @@ CANVAS_Y = WINDOW_H - 120
 numb_points = 0
 point_list = []
 
+def translate_to_can_sys(x, y):
+    return transform_x(x), transform_y(y)
+
+def point_not_enter():
+    messagebox.showwarning("Warning!", "Координаты точки не введены!")
+
+def number_not_enter():
+    messagebox.showwarning("Warning!", "Точка для удаления не введена!")
+
+def point_not_exist():
+    messagebox.showwarning("Warning!", "Введенная точка не существует!")
+
+def point_is_exist():
+    messagebox.showwarning("Warning!", "Введенная точка уже существует!")
+
 def task():
-    messagebox.showinfo("Условие задачи", 
-                        "На плоскости дано множество точек.\n"
-                        "Определить радиусы и центры двух окружностей, проходящих,\n"
-                        "по крайней мере , через четыре различные точки заданного множества,\n"
-                        "\n")
+    messagebox.showinfo("Условие задачи", "На плоскости дано множество точек. Определить радиусы и центры двух окружностей, \n"
+                        "проходящих, по крайней мере , через четыре различные точки заданного множества, которые содержат\n" 
+                        "внутри наибольшее кол-во точек этого множества, притом площадь их пересечения максимальна.")
+
+def translate_from_can_sys(x, y):
+    return transform_origin_x(x), transform_origin_y(y)
 
 def transform_origin_x(x):
     return x * (x_max - x_min) / CANVAS_X - x_min
 
-def tranform_origin_y(y):
+def transform_origin_y(y):
     return -(y * (y_max - y_min) / CANVAS_Y - y_max)
+
+def transform_x(x):
+    return (x - x_min) / (x_max - x_min) * CANVAS_X
+
+def transform_y(y):
+    return (y_max - y) / (y_max - y_min) * CANVAS_Y
 
 def draw_axis():
     for i in range(0, CANVAS_Y, 50):
         canvas.create_line(7, CANVAS_Y - i - AXIS_SPACE, 13, CANVAS_Y - i - AXIS_SPACE, width=2)
         if i != 0:
-            canvas.create_text(25, CANVAS_Y - i - AXIS_SPACE, text=str(round(tranform_origin_y(CANVAS_Y - i - AXIS_SPACE), 2)))
+            canvas.create_text(25, CANVAS_Y - i - AXIS_SPACE, text=str(round(transform_origin_y(CANVAS_Y - i - AXIS_SPACE), 2)))
 
     for i in range(0, CANVAS_X, 50):
         canvas.create_line(i + AXIS_SPACE, CANVAS_Y - 13, i + AXIS_SPACE, CANVAS_Y - 7, width=2)
@@ -39,19 +62,136 @@ def draw_axis():
 
     canvas.create_line(0, CANVAS_Y - AXIS_SPACE, CANVAS_X, CANVAS_Y - AXIS_SPACE, width=2, arrow=LAST)
     canvas.create_line(AXIS_SPACE, CANVAS_Y, AXIS_SPACE, 0, width=2, arrow=LAST)
+
+def draw_point(x, y, name, color):
+    xp, yp = transform_x(x), transform_y(y)
+    coor = str(name) + ".(" + str(round(x, 2)) + ";" + str(round(y, 2)) + ")"
+    canvas.create_oval(xp - 2, yp - 2, xp + 2, yp + 2, fill=color, outline=color, width=2)
+    canvas.create_text(xp + 5, yp - 10, text=coor, fill=color, font=("Times New Roman", 10))
+
+def clear_fields(field):
+    string = field.get()
+    len_str = len(string)
+    while len_str >= 1:
+        field.delete(len_str - 1)
+        len_str -= 1
+
+def add_point():
+    global numb_points
+
+    x_text = x_point_txt.get()
+    y_text = y_point_txt.get()
+
+    if x_text == "" or y_text == "":
+        point_not_enter()
+    else:
+        try:
+            x, y = float(x_text), float(y_text)
+            flag = False
+            for p in point_list:
+                flag = p.equal_points(x, y)
+                if flag:
+                    break
+            if point_list == [] or (not flag):
+                point_list.append(Point(x, y))
+                scroll_menu.insert(numb_points, str(numb_points + 1) + ".(" + str(round(x, 2)) + ";" + str(round(y, 2)) + ")")
+                numb_points += 1
+                draw_point(x, y, numb_points, color_points_add)
+                clear_fields(del_point_txt)
+                del_point_txt.insert(0, numb_points)
+            else:
+                point_is_exist()
+        except:
+            messagebox.showwarning("Warning!", "Введены недопустимые символы")
+        clear_fields(x_point_txt)
+        clear_fields(y_point_txt)
+
+def del_point():
+    global numb_points
+
+    del_text = del_point_txt.get()
+    if del_text == "":
+        number_not_enter()
+    else:
+        try:
+            index_del = int(del_text) - 1
+            if index_del >= len(point_list) or index_del < 0:
+                point_not_exist()
+                
+            elif numb_points != 0:
+                canvas.delete("all")
+                draw_axis()
+
+                point_list.pop(index_del)
+
+                for i in range(0, len(point_list)):
+                    draw_point(point_list[i].x, point_list[i].y, i + 1, color_points_add)
+                
+                scroll_menu.delete(index_del)
+                clear_fields(del_point_txt)
+                numb_points -= 1
+                if numb_points != 0:
+                    del_point_txt.insert(0, numb_points)
+
+                if index_del == numb_points:
+                    scroll_menu.delete(index_del)
+                else:
+                    scroll_menu.delete(index_del, scroll_menu.size() - 1)
+                    for i in range(index_del, len(point_list)):
+                        x, y = point_list[i].x, point_list[i].y
+                        scroll_menu.insert(i, str(i + 1) + ".(" + str(round(x, 2)) + ";" + str(round(y, 2)) + ")")
+        except:
+            number_not_enter()
     
+def draw_circle(a, b):
+    x1, y1 = a.x, a.y
+    x2, y2 = b.x, b.y
+    rad = sqrt(((x2-x1)**2)+((y2-y1)**2))
+    x1, x2, y1, y2 = x1-rad, x1+rad, (y1+rad), (y1-rad)
     
+    x1, y1 = translate_to_can_sys(x1, y1)
+    x2, y2 = translate_to_can_sys(x2, y2)
+    canvas.create_oval(x1, y1, x2, y2, outline="green", width=2)
+
+def find_circle():
+    global numb_points
+    amount = len(point_list)
+    if not point_list or numb_points < 4:
+        messagebox.showwarning("Error", "Введено недостаточно точек\nВведите четыре точки")
+        return
+    for i in range(amount):
+        for j in range(amount):
+            if i != j:
+                pa = point_list[i]
+                pb = point_list[j]
+                rad = sqrt(((pb.x-pa.x)**2)+((pb.y-pa.y)**2))
+
+                
+                draw_circle(pa, pb)
+
+
+
+def print_result():
+    pass
+
 def clear_canvas_field():
     global numb_points
     # global flag_find_circle
 
-    # canvas.delete()
+    canvas.delete("all")
+    clear_fields(del_point_txt)
+    clear_fields(x_point_txt)
+    clear_fields(y_point_txt)
+    draw_axis()
+    point_list.clear()
+    numb_points = 0
+    scroll_menu.delete(0, scroll_menu.size() - 1)
 
 
 if __name__ == "__main__":
     CORRECT = 1
     MISTAKE = 0
-    color_points = "purple"
+    color_points_add = "purple"
     kx_space = 1.01
     ky_space = 1.02
 
@@ -72,7 +212,7 @@ if __name__ == "__main__":
     
     window.title("Lab №1")
     window.geometry("%dx%d" % (WINDOW_W, WINDOW_H))
-    window.resizable(True, True)
+    window.resizable(False, False)
 
     canvas = Canvas(window, width=CANVAS_X, height=CANVAS_Y, bg="lightblue")
     canvas.place(x=0, y=120)
@@ -83,8 +223,27 @@ if __name__ == "__main__":
     x_point_txt = Entry(window, font=("Times New Roman", 13))
     x_point_txt.place(width=50, height=40, x=50, y=15)
 
-    Label(window, text="Y: ", font=("Times New Roman", 18)).place(width=60, height=40, x=10, y=70)
+    Label(window, text="Y: ", font=("Times New Roman", 18)).place(width=60, height=40, x=100, y=15)
     y_point_txt = Entry(window, font=("Times New Roman", 13))
-    y_point_txt.place(width=50, height=40, x=50, y=70)
+    y_point_txt.place(width=50, height=40, x=140, y=15)
 
+    Button(text="Добавить точку", font=("Times New Roman", 15), command=add_point).place(width=180, height=40, x=10, y=60)
+
+    Label(window, text="Список точек:", font=("Times New Roman", 15)).place(width=180, height=40, x=830, y=15)
+    scroll_menu = Listbox()
+    scroll_menu.place(width=180, height=100, x=1000, y=15)
+    
+    
+    Label(window, text="№: ", font=("Times New Roman", 18)).place(width=60, height=40, x=200, y=15)
+    del_point_txt = Entry(window, font=("Times New Roman", 13))
+    del_point_txt.place(width=130, height=40, x=250, y=15)
+    Button(text="Удалить точку", font=("Times New Roman", 15), command=del_point).place(width=180, height=40, x=200, y=60)
+    Button(text="Удалить все точки", font=("Times New Roman", 15), command=clear_canvas_field).place(width=180, height=40, x=600, y=15)
+
+    Button(text="Построить окруж.", font=("Times New Roman", 15), bg="red", command=find_circle).place(width=180, height=40, x=400, y=60)
+    Button(text="Вывести результат", font=("Times New Roman", 15), bg="red", command=print_result).place(width=180, height=40, x=600, y=60)
+    
+    Button(text="Условие задачи", font=("Times New Roman", 15), command=task).place(width=180, height=40, x=400, y=15)
+    
+    
     window.mainloop()

@@ -1,11 +1,11 @@
 EPS = 1e-6
 
 class Point:
-    def __init__(self):
+    def __int__(self):
         self.x = 0
         self.y = 0
 
-    def __set__(self, x, y):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
 
