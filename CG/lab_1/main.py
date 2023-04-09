@@ -1,11 +1,10 @@
 from Point import *
-from math import sqrt
+from circle_funcs import *
 from tkinter import Tk, Canvas, Label, Entry, Button, messagebox, Listbox, LAST
 
 window = Tk()
-SCALE_CONST = 200
-WINDOW_W = window.winfo_screenwidth() - SCALE_CONST
-WINDOW_H = window.winfo_screenheight() - 70 - SCALE_CONST
+WINDOW_W = window.winfo_screenwidth() 
+WINDOW_H = window.winfo_screenheight() - 70
 AXIS_SPACE = 10
 
 CANVAS_X = WINDOW_W
@@ -107,7 +106,7 @@ def add_point():
         clear_fields(y_point_txt)
 
 def del_point():
-    global numb_points
+    global numb_points, flag_found_circles
 
     del_text = del_point_txt.get()
     if del_text == "":
@@ -115,6 +114,7 @@ def del_point():
     else:
         try:
             index_del = int(del_text) - 1
+            flag_found_circles = False
             if index_del >= len(point_list) or index_del < 0:
                 point_not_exist()
                 
@@ -143,36 +143,81 @@ def del_point():
         except:
             number_not_enter()
     
-def draw_circle(a, b):
-    x1, y1 = a.x, a.y
-    x2, y2 = b.x, b.y
-    rad = sqrt(((x2-x1)**2)+((y2-y1)**2))
+def draw_circle(center, rad):
+    x1, y1 = center.x, center.y
     x1, x2, y1, y2 = x1-rad, x1+rad, (y1+rad), (y1-rad)
     
     x1, y1 = translate_to_can_sys(x1, y1)
     x2, y2 = translate_to_can_sys(x2, y2)
     canvas.create_oval(x1, y1, x2, y2, outline="green", width=2)
 
-def find_circle():
-    global numb_points
+def points_on_one_line(a, b, c):
+    if abs((c.x - a.x) * (b.y - b.y) - (b.x - a.x) * (c.y - a.y)) > EPS: 
+        return CORRECT
+    return MISTAKE
+
+def all_points_on_one_line():
     amount = len(point_list)
+    for i in range(amount - 2):
+        for j in range(i + 1, amount - 1):
+            for k in range(j + 1, amount):
+                if points_on_one_line(point_list[i], point_list[j], point_list[k]) == CORRECT:
+                    return CORRECT
+                # if abs((point_list[k].x - point_list[i].x) * (point_list[j].y - point_list[i].y) - \
+                #        (point_list[j].x - point_list[i].x) * (point_list[k].y - point_list[i].y)) > EPS:
+                #     return CORRECT
+    return MISTAKE
+
+def find_circle():
+    global numb_points, amount_points, area_inter, flag_found_circles
+    global circle_1, circle_2, radius_1, radius_2
+    amount = len(point_list)
+    circles_list = []
     if not point_list or numb_points < 4:
         messagebox.showwarning("Error", "Введено недостаточно точек\nВведите четыре точки")
         return
-    for i in range(amount):
-        for j in range(amount):
-            if i != j:
+    if all_points_on_one_line() == MISTAKE:
+        messagebox.showwarning("Error", "Невозможно построить окружность на заданных точках\nВведите четыре точки")
+        return
+    for i in range(amount - 2):
+        for j in range(i + 1, amount - 1):
+            for k in range(j + 1, amount):
                 pa = point_list[i]
                 pb = point_list[j]
-                rad = sqrt(((pb.x-pa.x)**2)+((pb.y-pa.y)**2))
+                pc = point_list[k]
+                tmp_center = get_center(pa, pb, pc)
+                if tmp_center != MISTAKE:
+                    tmp_rad = get_radius(tmp_center, pa)
+                    tmp_circle_data = [tmp_center, tmp_rad]
+                    circles_list.append(tmp_circle_data)
 
-                
-                draw_circle(pa, pb)
+    circles_amount = len(circles_list)
+    for i in range(circles_amount - 1):
+        for j in range(i + 1, circles_amount):
+            tmp_amount_points = get_amount_points_in_area(circles_list[i], circles_list[j], point_list)
+            tmp_area = get_area_inters(circles_list[i], circles_list[j])
+            if (tmp_amount_points > amount_points or (tmp_amount_points == amount_points and tmp_area > area_inter)):
+                flag_found_circles = True
+                amount_points = tmp_amount_points
+                area_inter = tmp_area
+                circle_1 = circles_list[i][0]
+                radius_1 = circles_list[i][1]
+                circle_2 = circles_list[j][0]
+                radius_2 = circles_list[j][1]
 
+    if flag_found_circles == True:
+        draw_circle(circle_1, radius_1)
+        draw_circle(circle_2, radius_2)
 
 
 def print_result():
-    pass
+    global circle_1, circle_2, radius_1, radius_2
+    if flag_found_circles == False:
+        messagebox.showwarning("Error", "Окружности не были найдены\nПопробуйте посторить окружности")
+        return
+    messagebox.showinfo("Result", "Центр первой окружности: X:{}\tY:{}\nРадиус первой окружности: {}\n\
+                        Центр второй окружности: X:{}\tY:{}\nРадиус второй окружности: {}".format(circle_1.x, circle_1.y, radius_1,\
+                                                                                                  circle_2.x, circle_2.y, radius_2))
 
 def clear_canvas_field():
     global numb_points
@@ -208,7 +253,13 @@ if __name__ == "__main__":
     y_min = y_c - (y_c - y_min) * ky_space
     y_max = y_c + (y_max - y_c) * ky_space
 
-    flag_found_circle = False
+    flag_found_circles = False
+    amount_points = -1
+    area_inter = -1
+    circle_1 = Point(0, 0)
+    radius_1 = 0
+    circle_2 = Point(0, 0)
+    radius_2 = 0
     
     window.title("Lab №1")
     window.geometry("%dx%d" % (WINDOW_W, WINDOW_H))
@@ -240,8 +291,8 @@ if __name__ == "__main__":
     Button(text="Удалить точку", font=("Times New Roman", 15), command=del_point).place(width=180, height=40, x=200, y=60)
     Button(text="Удалить все точки", font=("Times New Roman", 15), command=clear_canvas_field).place(width=180, height=40, x=600, y=15)
 
-    Button(text="Построить окруж.", font=("Times New Roman", 15), bg="red", command=find_circle).place(width=180, height=40, x=400, y=60)
-    Button(text="Вывести результат", font=("Times New Roman", 15), bg="red", command=print_result).place(width=180, height=40, x=600, y=60)
+    Button(text="Построить окруж.", font=("Times New Roman", 15), command=find_circle).place(width=180, height=40, x=400, y=60)
+    Button(text="Вывести результат", font=("Times New Roman", 15), command=print_result).place(width=180, height=40, x=600, y=60)
     
     Button(text="Условие задачи", font=("Times New Roman", 15), command=task).place(width=180, height=40, x=400, y=15)
     
