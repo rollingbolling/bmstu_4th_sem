@@ -22,6 +22,9 @@ SSEG ENDS
 DSEGMATRIX SEGMENT para public 'DATA'
 	N db 0
 	M db 0
+    ZERO db 0
+    ZERO_C db 0
+    ZERO_CUR db 0
     M_MAX db 9
     N_MAX db 9
 	MATRIX db 9 * 9 dup(0)
@@ -105,11 +108,12 @@ read_matrix proc           ; процедура чтения матрицы
         read_element_loop:       ; чтение элементов
             call read_number
             mov matrix[bx][si], dh      ; записываем число в матрицу из dh, так как прочитали туда
-            inc si                      ; si++
+            ;inc si                      ; si++
+            add si, 9
             loop read_element_loop     
         call newline_print              ; вывод новой строки
-        add bl, M_MAX                   ; bx + M_MAX  
-           
+        ;add bl, M_MAX                   ; bx + M_MAX  
+        add bl, 1   
         pop cx                          ; достаем из стека cx
         loop read_row_loop              
        
@@ -135,15 +139,52 @@ print_matrix proc        ; процедура вывода матрицы
         print_element_loop:
             mov dh, matrix[bx][si]        ; в dh кладем само значение чтобы предать в print_matrix
             call print_number
-            inc si
+            add si, 9
             loop print_element_loop
         call newline_print
-        add bl, M_MAX        
+        inc bl    
         pop cx
         loop print_row_loop
         
     ret
 print_matrix endp
+
+count_zeros proc
+    mov cx, 0
+    mov cl, N
+    mov bx, 0
+
+    cmp cx, 0
+    jle out_proc
+    count_column_loop:
+        push cx
+        mov cl, M
+        mov ZERO_CUR, 0
+        mov si, 0
+        cmp cx, 0
+        jle out_change
+        el_check_loop:
+            mov ah, matrix[bx][si]
+            inc si
+            cmp ax, 0
+            jle increm
+            loop el_check_loop
+        inc bl
+        mov ah, ZERO_CUR
+        cmp ZERO, ah
+        jl swap
+        pop cx
+        loop count_column_loop
+    ret
+count_zeros endp
+
+swap:
+    xchg ah, ZERO_CUR
+    xchg ah, ZERO
+    mov ZERO_C, bl
+
+increm:
+    inc ZERO_CUR
 
 out_proc:   ; вывход из процедуры по неверным данным 
     ret
@@ -156,17 +197,17 @@ change_matrix proc   ; процедура обмена 1 и 2, 3 и 4 - элем
 
     mov ax, 0
     mov bl, 2 ; считаем количество обменов для цикла exchange_element_loop
-    mov al, M
+    mov al, N
     div bl 
     
     mov cx, 0
-    mov cl, N
+    mov cl, M
     mov bx, 0
     
     cmp cx, 0
     jle out_proc
     
-    line_loop:
+    row_loop:
         push cx   
         
         mov si, 0
@@ -176,18 +217,15 @@ change_matrix proc   ; процедура обмена 1 и 2, 3 и 4 - элем
         jle out_change
 
         exchange_element_loop:            
-            ;xchg ah, matrix[bx][si]     ; обмен элементами
-            ;xchg ah, matrix[bx][si + 1]
-            ;xchg ah, matrix[bx][si]
-            xchg ah, matrix[si][bx]     ; обмен элементами
-            xchg ah, matrix[si+1][bx]
-            xchg ah, matrix[si][bx]
+            xchg ah, matrix[bx][si]     ; обмен элементами
+            xchg ah, matrix[bx][si+1]
+            xchg ah, matrix[bx][si]
             
             add si, 2
             loop exchange_element_loop  
-        add bl, M_MAX        
+        add bl, N_MAX
         pop cx
-        loop line_loop
+        loop row_loop
          
     ret
 change_matrix endp
