@@ -1,0 +1,10 @@
+debug/actions.o
+debug/draw_figure.o
+debug/errors.o
+debug/edges.o
+debug/figure.o
+debug/point.o
+debug/points.o
+debug/main.o
+debug/mainwindow.o
+debug/moc_mainwindow.o

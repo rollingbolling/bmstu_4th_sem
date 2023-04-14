@@ -1,0 +1,10 @@
+release/actions.o
+release/draw_figure.o
+release/errors.o
+release/edges.o
+release/figure.o
+release/point.o
+release/points.o
+release/main.o
+release/mainwindow.o
+release/moc_mainwindow.o
