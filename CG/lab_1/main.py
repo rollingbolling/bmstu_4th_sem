@@ -76,7 +76,7 @@ def clear_fields(field):
         len_str -= 1
 
 def add_point():
-    global numb_points
+    global numb_points, flag_found_circles
 
     x_text = x_point_txt.get()
     y_text = y_point_txt.get()
@@ -92,6 +92,12 @@ def add_point():
                 if flag:
                     break
             if point_list == [] or (not flag):
+                if flag_found_circles == True:
+                    canvas.delete("all")
+                    draw_axis()
+                    flag_found_circles = False
+                    for i in range(0, len(point_list)):
+                        draw_point(point_list[i].x, point_list[i].y, i + 1, color_points_add)
                 point_list.append(Point(x, y))
                 scroll_menu.insert(numb_points, str(numb_points + 1) + ".(" + str(round(x, 2)) + ";" + str(round(y, 2)) + ")")
                 numb_points += 1
@@ -121,7 +127,6 @@ def del_point():
             elif numb_points != 0:
                 canvas.delete("all")
                 draw_axis()
-
                 point_list.pop(index_del)
 
                 for i in range(0, len(point_list)):
@@ -176,6 +181,12 @@ def find_circle():
     if not point_list or numb_points < 4:
         messagebox.showwarning("Error", "Введено недостаточно точек\nВведите четыре точки")
         return
+    if flag_found_circles == True:
+        print("here")
+        canvas.delete("all")
+        draw_axis()
+        for i in range(0, len(point_list)):
+            draw_point(point_list[i].x, point_list[i].y, i + 1, color_points_add)
     if all_points_on_one_line() == MISTAKE:
         messagebox.showwarning("Error", "Невозможно построить окружность на заданных точках\nВведите четыре точки")
         return
@@ -209,14 +220,13 @@ def find_circle():
         draw_circle(circle_1, radius_1)
         draw_circle(circle_2, radius_2)
 
-
 def print_result():
     global circle_1, circle_2, radius_1, radius_2
     if flag_found_circles == False:
         messagebox.showwarning("Error", "Окружности не были найдены\nПопробуйте посторить окружности")
         return
-    messagebox.showinfo("Result", "Центр первой окружности: X:{}\tY:{}\nРадиус первой окружности: {}\n\
-                        Центр второй окружности: X:{}\tY:{}\nРадиус второй окружности: {}".format(circle_1.x, circle_1.y, radius_1,\
+    messagebox.showinfo("Result", "Центр первой окружности: X:{}\tY:{}\nРадиус первой окружности: {}\n"
+                                  "Центр второй окружности: X:{}\tY:{}\nРадиус второй окружности: {}".format(circle_1.x, circle_1.y, radius_1,\
                                                                                                   circle_2.x, circle_2.y, radius_2))
 
 def clear_canvas_field():
