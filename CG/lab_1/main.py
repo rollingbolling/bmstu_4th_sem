@@ -76,7 +76,7 @@ def clear_fields(field):
         len_str -= 1
 
 def add_point():
-    global numb_points, flag_found_circles
+    global numb_points, flag_found_circles, area_inter, amount_points
 
     x_text = x_point_txt.get()
     y_text = y_point_txt.get()
@@ -96,6 +96,8 @@ def add_point():
                     canvas.delete("all")
                     draw_axis()
                     flag_found_circles = False
+                    area_inter = -1
+                    amount_points = -1
                     for i in range(0, len(point_list)):
                         draw_point(point_list[i].x, point_list[i].y, i + 1, color_points_add)
                 point_list.append(Point(x, y))
@@ -112,7 +114,7 @@ def add_point():
         clear_fields(y_point_txt)
 
 def del_point():
-    global numb_points, flag_found_circles
+    global numb_points, flag_found_circles, area_inter, amount_points
 
     del_text = del_point_txt.get()
     if del_text == "":
@@ -120,7 +122,6 @@ def del_point():
     else:
         try:
             index_del = int(del_text) - 1
-            flag_found_circles = False
             if index_del >= len(point_list) or index_del < 0:
                 point_not_exist()
                 
@@ -145,6 +146,10 @@ def del_point():
                     for i in range(index_del, len(point_list)):
                         x, y = point_list[i].x, point_list[i].y
                         scroll_menu.insert(i, str(i + 1) + ".(" + str(round(x, 2)) + ";" + str(round(y, 2)) + ")")
+        
+                flag_found_circles = False
+                area_inter = -1
+                amount_points = -1
         except:
             number_not_enter()
     
@@ -156,11 +161,6 @@ def draw_circle(center, rad):
     x2, y2 = translate_to_can_sys(x2, y2)
     canvas.create_oval(x1, y1, x2, y2, outline="green", width=2)
 
-def points_on_one_line(a, b, c):
-    if abs((c.x - a.x) * (b.y - b.y) - (b.x - a.x) * (c.y - a.y)) > EPS: 
-        return CORRECT
-    return MISTAKE
-
 def all_points_on_one_line():
     amount = len(point_list)
     for i in range(amount - 2):
@@ -168,9 +168,6 @@ def all_points_on_one_line():
             for k in range(j + 1, amount):
                 if points_on_one_line(point_list[i], point_list[j], point_list[k]) == CORRECT:
                     return CORRECT
-                # if abs((point_list[k].x - point_list[i].x) * (point_list[j].y - point_list[i].y) - \
-                #        (point_list[j].x - point_list[i].x) * (point_list[k].y - point_list[i].y)) > EPS:
-                #     return CORRECT
     return MISTAKE
 
 def find_circle():
@@ -181,15 +178,16 @@ def find_circle():
     if not point_list or numb_points < 4:
         messagebox.showwarning("Error", "Введено недостаточно точек\nВведите четыре точки")
         return
-    if flag_found_circles == True:
-        print("here")
-        canvas.delete("all")
-        draw_axis()
-        for i in range(0, len(point_list)):
-            draw_point(point_list[i].x, point_list[i].y, i + 1, color_points_add)
     if all_points_on_one_line() == MISTAKE:
         messagebox.showwarning("Error", "Невозможно построить окружность на заданных точках\nВведите четыре точки")
         return
+    if flag_found_circles:
+        canvas.delete("all")
+        draw_axis()
+        if point_list:
+            for i in range(0, amount):
+                draw_point(point_list[i].x, point_list[i].y, i + 1, color_points_add)
+        flag_found_circles = False
     for i in range(amount - 2):
         for j in range(i + 1, amount - 1):
             for k in range(j + 1, amount):
@@ -215,7 +213,7 @@ def find_circle():
                 radius_1 = circles_list[i][1]
                 circle_2 = circles_list[j][0]
                 radius_2 = circles_list[j][1]
-
+    
     if flag_found_circles == True:
         draw_circle(circle_1, radius_1)
         draw_circle(circle_2, radius_2)
@@ -225,13 +223,13 @@ def print_result():
     if flag_found_circles == False:
         messagebox.showwarning("Error", "Окружности не были найдены\nПопробуйте посторить окружности")
         return
-    messagebox.showinfo("Result", "Центр первой окружности: X:{}\tY:{}\nРадиус первой окружности: {}\n"
+    messagebox.showinfo("Result", "Центр первой окружности: X:{}\tY:{}\nРадиус первой окружности: {}\n\n"
                                   "Центр второй окружности: X:{}\tY:{}\nРадиус второй окружности: {}".format(circle_1.x, circle_1.y, radius_1,\
                                                                                                   circle_2.x, circle_2.y, radius_2))
 
 def clear_canvas_field():
     global numb_points
-    # global flag_find_circle
+    global flag_found_circles
 
     canvas.delete("all")
     clear_fields(del_point_txt)
@@ -241,7 +239,7 @@ def clear_canvas_field():
     point_list.clear()
     numb_points = 0
     scroll_menu.delete(0, scroll_menu.size() - 1)
-
+    flag_found_circles = False
 
 if __name__ == "__main__":
     CORRECT = 1

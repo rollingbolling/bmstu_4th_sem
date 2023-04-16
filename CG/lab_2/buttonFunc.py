@@ -4,7 +4,7 @@ import config as cfg
 import math as m
 
 INFORMATION = "Функциональность программы"
-
+figure_points = [list(), list(), list(), list()]
 class Point:
     def __init__(self, x=0, y=0):
         self.x = x
@@ -41,7 +41,10 @@ def create_point(x, y):
     return point
 
 def get_figure():
-    figure = [[], [], [], []]
+    global figure_points
+    for i in range(len(figure_points)):
+        figure_points[i].clear()
+    figure_points = [[], [], [], []]
     figure_steps = read_figure(cfg.FIGURE_FILE)
     point = Point()
     translate_to_field_coord(point)
@@ -49,10 +52,8 @@ def get_figure():
         for step in range(len(figure_steps[i])):
             point.x = point.move_x(figure_steps[i][step].x)
             point.y = point.move_y(figure_steps[i][step].y)
-            figure[i].append(create_point(point.x, point.y))
-    return figure
-
-figure_points = get_figure()
+            figure_points[i].append(create_point(point.x, point.y))
+    # return figure
 
 def draw_figure(field):
     global figure_points

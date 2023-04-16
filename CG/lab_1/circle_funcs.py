@@ -1,6 +1,11 @@
 from math import sqrt, acos, sin, pi
 from Point import *
 
+def points_on_one_line(a, b, c):
+    if abs((c.x - a.x) * (b.y - b.y) - (b.x - a.x) * (c.y - a.y)) > EPS: 
+        return 1
+    return 0
+
 def get_radius(center, a):
     dx = center.x - a.x
     dy = center.y - a.y

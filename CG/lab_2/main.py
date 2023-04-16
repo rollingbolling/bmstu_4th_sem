@@ -3,6 +3,11 @@ import tkinter.messagebox as mb
 import config as cfg
 import buttonFunc as bf
 
+def draw_figure_on_can():
+    field.delete("all")
+    bf.get_figure()
+    bf.draw_figure(field)
+
 def move_figure():
     try:
         x = float(dxEntry.get())
@@ -16,7 +21,6 @@ def move_figure():
         bf.move_list(move_coefs)
     
     field.delete("all")
-    bf.drawAxis(field)
     bf.draw_figure(field)
 
 def scale_figure():
@@ -33,7 +37,6 @@ def scale_figure():
         scale_center = [cx_scale, cy_scale]
         bf.scale_list(scale_coefs, scale_center)
     field.delete("all")
-    bf.drawAxis(field)
     bf.draw_figure(field)
 
 def rotate_figure():
@@ -48,7 +51,6 @@ def rotate_figure():
         rot_center = [x, y]
         bf.rotate_list(rot_center, angle)
     field.delete("all")
-    bf.drawAxis(field)
     bf.draw_figure(field)
 
 if __name__ == "__main__":
@@ -186,7 +188,7 @@ if __name__ == "__main__":
     #-------------------------------------------------------------------------------------------------------------------------------------------------
     #Draw---------------------------------------------------------------------------------------------------------------------------------------------
     constBtn = tk.Button(dataFrame, text="Построить", font=("Consolas", 14),
-                        bg=cfg.MAIN_FRAME_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR, command=lambda: bf.draw_figure(field),
+                        bg=cfg.MAIN_FRAME_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR, command=draw_figure_on_can,
                         activebackground=cfg.ADD_COLOUR, activeforeground=cfg.MAIN_FRAME_COLOUR)
 
     constBtn.place(x=0, y=cfg.DATA_H * 3 * cfg.COLUMNS_DATA_BORDERS_H + 3 * cfg.DATA_H // cfg.COLUMNS + 30, width=cfg.DATA_W,
