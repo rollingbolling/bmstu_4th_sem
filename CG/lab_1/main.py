@@ -203,17 +203,20 @@ def find_circle():
     circles_amount = len(circles_list)
     for i in range(circles_amount - 1):
         for j in range(i + 1, circles_amount):
-            tmp_amount_points = get_amount_points_in_area(circles_list[i], circles_list[j], point_list)
-            tmp_area = get_area_inters(circles_list[i], circles_list[j])
-            if (tmp_amount_points > amount_points or (tmp_amount_points == amount_points and tmp_area > area_inter)):
-                flag_found_circles = True
-                amount_points = tmp_amount_points
-                area_inter = tmp_area
-                circle_1 = circles_list[i][0]
-                radius_1 = circles_list[i][1]
-                circle_2 = circles_list[j][0]
-                radius_2 = circles_list[j][1]
-    
+            if (circles_list[i][1] == circles_list[j][1] and circles_list[i][0].equal_points(circles_list[j][0].x, circles_list[j][0].y)):
+                pass
+            else:
+                tmp_amount_points = get_amount_points_in_area(circles_list[i], circles_list[j], point_list)
+                tmp_area = get_area_inters(circles_list[i], circles_list[j])
+                if (tmp_amount_points > amount_points or (tmp_amount_points == amount_points and tmp_area > area_inter)):
+                    flag_found_circles = True
+                    amount_points = tmp_amount_points
+                    area_inter = tmp_area
+                    circle_1 = circles_list[i][0]
+                    radius_1 = circles_list[i][1]
+                    circle_2 = circles_list[j][0]
+                    radius_2 = circles_list[j][1]
+
     if flag_found_circles == True:
         draw_circle(circle_1, radius_1)
         draw_circle(circle_2, radius_2)

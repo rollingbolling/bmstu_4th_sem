@@ -34,7 +34,7 @@ def get_area_inters(circle_1, circle_2):
     r = circle_1[1]
     R = circle_2[1]
     if d >= (r + R):
-        return 0
+        return -1
     if r > R:
         r = circle_2[1]
         R = circle_1[1]
@@ -44,7 +44,6 @@ def get_area_inters(circle_1, circle_2):
     angle1 = (r**2 + d ** 2 - R**2) / (2 * r * d)
     angle2 = (R**2 + d ** 2 - r**2) / (2 * R * d)
 
-    # check if the circles are overlapping
     if (-1 <= angle1 < 1) or (-1 <= angle2 < 1):
         theta1 = acos(angle1) * 2
         theta2 = acos(angle2) * 2
@@ -54,9 +53,6 @@ def get_area_inters(circle_1, circle_2):
 
         return area1 + area2
     elif angle1 < -1 or angle2 < -1:
-        # Smaller circle is completely inside the largest circle.
-        # Intersection area will be area of smaller circle
-        # return area(c1_r), area(c2_r)
         return pi * min(r, R) ** 2
     return 0
 

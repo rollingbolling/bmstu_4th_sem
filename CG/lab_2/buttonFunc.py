@@ -3,8 +3,8 @@ import tkinter.messagebox as mb
 import config as cfg
 import math as m
 
-INFORMATION = "Функциональность программы"
 figure_points = [list(), list(), list(), list()]
+
 class Point:
     def __init__(self, x=0, y=0):
         self.x = x
@@ -53,7 +53,6 @@ def get_figure():
             point.x = point.move_x(figure_steps[i][step].x)
             point.y = point.move_y(figure_steps[i][step].y)
             figure_points[i].append(create_point(point.x, point.y))
-    # return figure
 
 def draw_figure(field):
     global figure_points
@@ -62,8 +61,20 @@ def draw_figure(field):
             if step != 0:
                 field.create_line(figure_points[i][step - 1].x, figure_points[i][step - 1].y, figure_points[i][step].x, figure_points[i][step].y)
 
-def showInfoParams():
-    mb.showinfo("Info", INFORMATION)
+def show_info_move():
+    mb.showinfo("Информация про перенос",
+                "(Ввод dx, dy,\nгде dx, dy - перемещение\
+                \nпо х и по у соответственно)")
+
+def show_info_rotate():
+    mb.showinfo("Информация про поворот",
+                "(Ввод x, y, angle,\nгде x, y - координаты центра поворота, \
+                    \nangle - угол поворота в радианах)")
+
+def show_info_scale():
+    mb.showinfo("Информация про масштабирование",
+                "(Ввод kx, ky, cx, cy, где \nC(x, y) - центр масштабирования,\
+                    \n kx, ky - коэффициенты масштабирования)")
 
 def add_point(point, center):
     point.x += center.x

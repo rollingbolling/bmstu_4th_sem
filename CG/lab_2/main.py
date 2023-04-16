@@ -25,10 +25,10 @@ def move_figure():
 
 def scale_figure():
     try:
-        x = float(scxEntry.get())
-        y = float(scyEntry.get())
-        cx_scale = float(sxEntry.get())
-        cy_scale = float(syEntry.get())
+        x = float(sxEntry.get())
+        y = float(syEntry.get())
+        cx_scale = float(scxEntry.get())
+        cy_scale = float(scyEntry.get())
     except ValueError:
         mb.showerror("Неверный ввод",
                     "Введите действительные числа в поля ввода")
@@ -42,7 +42,7 @@ def scale_figure():
 def rotate_figure():
     try:
         x = float(rxEntry.get())
-        y = float(ryEntry.get())
+        y = -float(ryEntry.get())
         angle = float(angleEntry.get())
     except ValueError:
         mb.showerror("Неверный ввод",
@@ -55,7 +55,7 @@ def rotate_figure():
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.title("Лабораторная радота №2")
+    root.title("Lab №2")
     root["bg"] = cfg.MAIN_COLOUR
     root.geometry(str(cfg.WINDOW_W) + "x" + str(cfg.WINDOW_H))
     root.resizable(height=False, width=False)
@@ -64,15 +64,15 @@ if __name__ == "__main__":
     dataFrame["bg"] = cfg.MAIN_FRAME_COLOUR
     dataFrame.place(x=int(cfg.BORDERS_SPACE), y=int(cfg.BORDERS_SPACE), width=cfg.DATA_W, height=cfg.DATA_H)
 
-    field = tk.Canvas(root, bg="lightblue")
+    field = tk.Canvas(root, bg="white")#"lightblue")
     field.place(x=cfg.WINDOW_W * cfg.BORDERS_MAIN_MAKE + 2 * cfg.BORDERS_SPACE, y=cfg.BORDERS_SPACE,\
                 width=cfg.FIELD_W, height=cfg.FIELD_H)
 
 
     #Move---------------------------------------------------------------------------------------------------------------------------------------------
-    moveInfButton = tk.Button(dataFrame, text="i", font=("Consolas", 20), bg=cfg.ADD_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR,
-                            activebackground=cfg.ADD_COLOUR, 
-                            activeforeground=cfg.MAIN_COLOUR)
+    moveInfButton = tk.Button(dataFrame, text="i", font=("Consolas", 20), 
+                              bg=cfg.ADD_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR, command=bf.show_info_move,
+                              activebackground=cfg.ADD_COLOUR, activeforeground=cfg.MAIN_COLOUR)
 
     moveLabel = tk.Label(dataFrame, bg=cfg.ADD_COLOUR, text="ПЕРЕМЕЩЕНИЕ",
                         font=("Consolas", 16),
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     #-------------------------------------------------------------------------------------------------------------------------------------------------
     #Scale--------------------------------------------------------------------------------------------------------------------------------------------
     scaleInfButton = tk.Button(dataFrame, text="i", font=("Consolas", 20),
-                            bg=cfg.ADD_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR,# command=bf.showInfoScale,
+                            bg=cfg.ADD_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR, command=bf.show_info_scale,
                             activebackground=cfg.ADD_COLOUR, activeforeground=cfg.MAIN_COLOUR)
 
     scaleLabel = tk.Label(dataFrame, bg=cfg.ADD_COLOUR, text="МАСШТАБИРОВАНИЕ",
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     #-------------------------------------------------------------------------------------------------------------------------------------------------
     #Rotate-------------------------------------------------------------------------------------------------------------------------------------------
     rotateInfButton = tk.Button(dataFrame, text="i", font=("Consolas", 20),
-                            bg=cfg.ADD_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR,# command=bf.showInfoRotate,
+                            bg=cfg.ADD_COLOUR, fg=cfg.TEXT_ENTRY_COLOUR, command=bf.show_info_rotate,
                             activebackground=cfg.ADD_COLOUR, activeforeground=cfg.MAIN_COLOUR)
 
     rotateLabel = tk.Label(dataFrame, bg=cfg.ADD_COLOUR, text="ПОВЕРНУТЬ",
