@@ -131,7 +131,6 @@ def close_plt():
     plt.figure("Исследование ступенчатости алгоритмов построение.")
     plt.close()
 
-
 def time_bar(length):
     close_plt()
 
@@ -157,7 +156,6 @@ def time_bar(length):
     plt.xticks(Y, L)
     plt.ylabel("Cекунды (длина линии " + str(length) + ")")
     plt.show()
-
 
 def step_bar(length):
     close_plt()
@@ -237,6 +235,12 @@ def step_bar(length):
 
 root = tk.Tk()
 root.title("Lab №3")
+
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+WINDOW_W = screen_width
+WINDOW_H = screen_height
+
 root.geometry(str(WINDOW_W) + "x" + str(WINDOW_H))
 root["bg"] = MAIN_COLOUR
 root.resizable(False, False)

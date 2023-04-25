@@ -1,3 +1,5 @@
+from screeninfo import get_monitors
+
 MAIN_COLOUR = "#393A3A"#black
 FRAME_COLOUR = "#575959"#dark grey
 CANVAS_COLOUR = "#F4F4F4"#white
@@ -7,6 +9,8 @@ MAIN_COLOUR_LABEL_BG = "#FF642F"#orange
 MAIN_COLOUR_LABEL_TEXT = "black"
 MAIN_COLOUR_BUTON_BG = "#F89344"#red
 
+# monit_info = get_monitors()
+# print(monit_info)
 WINDOW_W = 1900#1000
 WINDOW_H = 900#600
 
