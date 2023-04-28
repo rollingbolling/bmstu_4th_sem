@@ -9,10 +9,14 @@ MAIN_COLOUR_LABEL_BG = "#FF642F"#orange
 MAIN_COLOUR_LABEL_TEXT = "black"
 MAIN_COLOUR_BUTON_BG = "#F89344"#red
 
-# monit_info = get_monitors()
-# print(monit_info)
-WINDOW_W = 1900#1000
-WINDOW_H = 900#600
+monitor = get_monitors()
+WINDOW_W = monitor[0].width
+WINDOW_H = int(monitor[0].height * 9/10)
+
+FONT_HEAD = 16
+FONT_BUTTON = 12
+FONT_ENTRY = 12
+FONT_LABEL = 12
 
 FRAME_SITUATION = 1/4
 BORDERS_SPACE = 10
@@ -25,3 +29,6 @@ COLUMNS = 26
 
 CANVAS_H = WINDOW_H - 2 * BORDERS_SPACE
 CANVAS_W = WINDOW_W * CANVAS_SITUATION - 2 * BORDERS_SPACE
+
+PLOT_W = WINDOW_W // 160
+PLOT_H = WINDOW_H // 160

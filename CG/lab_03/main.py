@@ -8,7 +8,9 @@ from draw import *
 from dda import *
 from brezenhem import *
 from vu import *
+from steping import *
 
+#BUTTON_FUNCS
 def drawAxes():
     colour = "gray"
     canvasField.create_line(0, 3, CANVAS_W, 3, width=1, fill='gray', arrow=tk.LAST)
@@ -39,21 +41,21 @@ def drawLine():
         try:
             x_start, y_start = float(x_start), float(y_start)
             x_end, y_end = float(x_end), float(y_end)
-        except all:
+            if algorithm == 0:
+                draw_line_by_algo(canvasField, DDA(x_start, y_start, x_end, y_end, colour=LINE_COLOUR))
+            elif algorithm == 1:
+                draw_line_by_algo(canvasField, BrezenhemFloat(x_start, y_start, x_end, y_end, colour=LINE_COLOUR))
+            elif algorithm == 2:
+                draw_line_by_algo(canvasField, BrezenhemInt(x_start, y_start, x_end, y_end, colour=LINE_COLOUR))
+            elif algorithm == 3:
+                draw_line_by_algo(canvasField,
+                                  BrezenhemSmooth(canvasField, x_start, y_start, x_end, y_end, LINE_COLOUR))
+            elif algorithm == 4:
+                draw_line_by_algo(canvasField, VU(canvasField, x_start, y_start, x_end, y_end, fill=LINE_COLOUR))
+            elif algorithm == 5:
+                draw_line_stand_algo(canvasField, x_start, y_start, x_end, y_end, colour=LINE_COLOUR)
+        except ValueError:
             messagebox.showwarning("Input ERROR", "Координаты неверны")
-
-        if algorithm == 0:
-            draw_line_by_algo(canvasField, DDA(x_start, y_start, x_end, y_end, colour=LINE_COLOUR))
-        elif algorithm == 1: 
-            draw_line_by_algo(canvasField, BrezenhemFloat(x_start, y_start, x_end, y_end, colour=LINE_COLOUR))
-        elif algorithm == 2: 
-            draw_line_by_algo(canvasField, BrezenhemInt(x_start, y_start, x_end, y_end, colour=LINE_COLOUR))
-        elif algorithm == 3: 
-            draw_line_by_algo(canvasField, BrezenhemSmooth(canvasField, x_start, y_start, x_end, y_end, LINE_COLOUR))
-        elif algorithm == 4: 
-            draw_line_by_algo(canvasField, VU(canvasField, x_start, y_start, x_end, y_end, fill=LINE_COLOUR))
-        elif algorithm == 5:
-            draw_line_stand_algo(canvasField, x_start, y_start, x_end, y_end, colour=LINE_COLOUR)
     
 def drawSpector():
     algorithm = algorithmsRB.get()
@@ -67,41 +69,42 @@ def drawSpector():
         messagebox.showwarning("Input ERROR", "Не заданы координаты начала")
     elif not x_end or not y_end:
         messagebox.showwarning("Input ERROR", "Не заданы координаты конца")
+    elif not angle:
+        messagebox.showwarning("Input ERROR", "Не задан угол поворота")
     else:
         try:
             x_start, y_start = float(x_start), float(y_start)
             x_end, y_end = float(x_end), float(y_end)
             angle = float(angle)
-        except all:
+            if algorithm == 0:
+                draw_specter_by_algo(canvasField, DDA,
+                                     x_start, y_start,
+                                     x_end, y_end, angle,
+                                     LINE_COLOUR)
+            elif algorithm == 1:
+                draw_specter_by_algo(canvasField, BrezenhemFloat,
+                                     x_start, y_start,
+                                     x_end, y_end, angle,
+                                     LINE_COLOUR)
+            elif algorithm == 2:
+                draw_specter_by_algo(canvasField, BrezenhemInt,
+                                     x_start, y_start,
+                                     x_end, y_end, angle,
+                                     LINE_COLOUR)
+            elif algorithm == 3:
+                draw_specter_by_algo(canvasField, BrezenhemSmooth,
+                                     x_start, y_start,
+                                     x_end, y_end, angle,
+                                     LINE_COLOUR, intesive=True)
+            elif algorithm == 4:
+                draw_specter_by_algo(canvasField, VU,
+                                     x_start, y_start,
+                                     x_end, y_end, angle,
+                                     LINE_COLOUR, intesive=True)
+            elif algorithm == 5:
+                draw_specter_stand_algo(canvasField, x_start, y_start, x_end, y_end, angle, LINE_COLOUR)
+        except ValueError:
             messagebox.showwarning("Input ERROR", 'Координаты заданы неверно!')
-
-        if algorithm == 0:
-            draw_specter_by_algo(canvasField, DDA,
-                                 x_start, y_start,
-                                 x_end, y_end, angle,
-                                 LINE_COLOUR)
-        elif algorithm == 1:
-            draw_specter_by_algo(canvasField, BrezenhemFloat,
-                                 x_start, y_start,
-                                 x_end, y_end, angle,
-                                 LINE_COLOUR)
-        elif algorithm == 2:
-            draw_specter_by_algo(canvasField, BrezenhemInt,
-                                 x_start, y_start,
-                                 x_end, y_end, angle,
-                                 LINE_COLOUR)
-        elif algorithm == 3:
-            draw_specter_by_algo(canvasField, BrezenhemSmooth,
-                                 x_start, y_start,
-                                 x_end, y_end, angle,
-                                 LINE_COLOUR, intesive=True)
-        elif algorithm == 4:
-            draw_specter_by_algo(canvasField, VU,
-                                 x_start, y_start,
-                                 x_end, y_end, angle,
-                                 LINE_COLOUR, intesive=True)
-        elif algorithm == 5:
-            draw_specter_stand_algo(canvasField, x_start, y_start, x_end, y_end, angle, LINE_COLOUR)
 
 def timeInput():
     length = lengthEntry.get()
@@ -110,7 +113,7 @@ def timeInput():
         if length <= 0:
             messagebox.showwarning("Input ERROR", "Длина для измерений должна быть больше нуля")
         else:
-            time_bar(length)
+            time_bar(length, canvasField)
     except ValueError:
         messagebox.showwarning("Input ERROR", "Длина для измерений задана неверно")
 
@@ -121,7 +124,7 @@ def stepInput():
         if length <= 0:
             messagebox.showwarning("Input ERROR", "Длина для измерений должна быть больше нуля")
         else:
-            step_bar(length)
+            step_bar(length, canvasField)
     except ValueError:
         messagebox.showwarning("Input ERROR", "Длина для измерений задана неверно")
     
@@ -131,120 +134,93 @@ def close_plt():
     plt.figure("Исследование ступенчатости алгоритмов построение.")
     plt.close()
 
-def time_bar(length):
-    close_plt()
-
-    plt.figure("Исследование времени работы алгоритмов построения.", figsize=(9, 7))
-    times = list()
-    angle = 1
-    pb = [375, 200]
-    pe = [pb[0] + length, pb[0]]
-
-    times.append(draw_specter_by_algo(canvasField, DDA, pb[0], pb[1], pe[0], pe[1], angle, CANVAS_COLOUR, draw=False))
-    times.append(draw_specter_by_algo(canvasField, BrezenhemFloat, pb[0], pb[1], pe[0], pe[1], angle, CANVAS_COLOUR, draw=False))
-    times.append(draw_specter_by_algo(canvasField, BrezenhemInt, pb[0], pb[1], pe[0], pe[1], angle, CANVAS_COLOUR, draw=False))
-    times.append(draw_specter_by_algo(canvasField, BrezenhemSmooth, pb[0], pb[1], pe[0], pe[1], angle, CANVAS_COLOUR, draw=False, intesive=True))
-    times.append(draw_specter_by_algo(canvasField, VU, pb[0], pb[1], pe[0], pe[1], angle, CANVAS_COLOUR, draw=False, intesive=True))
-    for i in range(len(times)):
-        times[i] *= 100
-
-    Y = range(len(times))
-
-    L = ('ЦДА', 'Брезенхем с\nдействительными\nкоэффицентами',
-         'Брезенхем с\nцелыми\nкоэффицентами', 'Брезенхем с\nс устранением\nступенчатости', 'Ву')
-    plt.bar(Y, times, align='center')
-    plt.xticks(Y, L)
-    plt.ylabel("Cекунды (длина линии " + str(length) + ")")
-    plt.show()
-
-def step_bar(length):
-    close_plt()
-
-    angle = 0
-    step = 2
-    pb = [0, 0]
-    pe = [pb[0], pb[1] + length]
-
-    angles = []
-    DDA_steps = []
-    BrezenhemInteger_steps = []
-    BrezenhemFloat_steps = []
-    BrezenhemSmooth_steps = []
-    VU_steps = []
-
-    for j in range(90 // step):
-        DDA_steps.append(DDA(pb[0], pb[1], pe[0], pe[1], stepmode=True))
-        BrezenhemInteger_steps.append(BrezenhemInt(pb[0], pb[1], pe[0], pe[1], stepmode=True))
-        BrezenhemFloat_steps.append(BrezenhemFloat(pb[0], pb[1], pe[0], pe[1], stepmode=True))
-        BrezenhemSmooth_steps.append(BrezenhemSmooth(canvasField, pb[0], pb[1], pe[0], pe[1], stepmode=True))
-        VU_steps.append(VU(canvasField, pb[0], pb[1], pe[0], pe[1], stepmode=True))
-
-        pe[0], pe[1] = turn_point(radians(step), pe[0], pe[1], pb[0], pb[1])
-        angles.append(angle)
-        angle += step
-
-    plt.figure("Исследование ступенчатости алгоритмов построение.", figsize=(18, 10))
-
-    plt.subplot(2, 3, 1)
-    plt.plot(angles, DDA_steps, label="ЦДА")
-    plt.plot(angles, BrezenhemInteger_steps, '--', label="Брензенхем с целыми или\nдействительными коэффицентами")
-    plt.plot(angles, BrezenhemInteger_steps, '.', label="Брензенхем с устр\nступенчатости")
-    plt.plot(angles, VU_steps, '-.', label="By")
-    plt.title("Исследование ступенчатости.\n{0} - длина отрезка".format(length))
-    plt.xticks(np.arange(91, step=5))
-    plt.legend()
-    plt.ylabel("Количество ступенек")
-    plt.xlabel("Угол в градусах")
-
-    plt.subplot(2, 3, 2)
-    plt.title("ЦДА")
-    plt.plot(angles, DDA_steps)
-    plt.xticks(np.arange(91, step=5))
-    plt.ylabel("Количество ступенек")
-    plt.xlabel("Угол в градусах")
-
-    plt.subplot(2, 3, 3)
-    plt.title("BУ")
-    plt.plot(angles, VU_steps)
-    plt.xticks(np.arange(91, step=5))
-    plt.ylabel("Количество ступенек")
-    plt.xlabel("Угол в градусах")
-
-    plt.subplot(2, 3, 4)
-    plt.title("Брензенхем с действительными коэффицентами")
-    plt.plot(angles, BrezenhemFloat_steps)
-    plt.xticks(np.arange(91, step=5))
-    plt.ylabel("Количество ступенек")
-    plt.xlabel("Угол в градусах")
-
-    plt.subplot(2, 3, 5)
-    plt.title("Брензенхем с целыми коэффицентами")
-    plt.plot(angles, BrezenhemInteger_steps)
-    plt.xticks(np.arange(91, step=5))
-    plt.ylabel("Количество ступенек")
-    plt.xlabel("Угол в градусах")
-
-    plt.subplot(2, 3, 6)
-    plt.title("Брензенхем с устр. ступенчатости")
-    plt.plot(angles, BrezenhemSmooth_steps)
-    plt.xticks(np.arange(91, step=5))
-    plt.ylabel("Количество ступенек")
-    plt.xlabel("Угол в градусах")
-
-    plt.show()
+# def step_bar(length):
+    # close_plt()
+    #
+    # angle = 0
+    # step = 2
+    # pb = [0, 0]
+    # pe = [pb[0], pb[1] + length]
+    #
+    # angles = []
+    # DDA_steps = []
+    # BrezenhemInteger_steps = []
+    # BrezenhemFloat_steps = []
+    # BrezenhemSmooth_steps = []
+    # VU_steps = []
+    #
+    # for j in range(90 // step):
+    #     DDA_steps.append(DDA(pb[0], pb[1], pe[0], pe[1], stepmode=True))
+    #     BrezenhemInteger_steps.append(BrezenhemInt(pb[0], pb[1], pe[0], pe[1], stepmode=True))
+    #     BrezenhemFloat_steps.append(BrezenhemFloat(pb[0], pb[1], pe[0], pe[1], stepmode=True))
+    #     BrezenhemSmooth_steps.append(BrezenhemSmooth(canvasField, pb[0], pb[1], pe[0], pe[1], stepmode=True))
+    #     VU_steps.append(VU(canvasField, pb[0], pb[1], pe[0], pe[1], stepmode=True))
+    #
+    #     pe[0], pe[1] = turn_point(radians(step), pe[0], pe[1], pb[0], pb[1])
+    #     angles.append(angle)
+    #     angle += step
+    #
+    # plt.figure("Исследование ступенчатости алгоритмов построение.", figsize=(18, 10))
+    #
+    # plt.subplot(2, 3, 1)
+    # plt.plot(angles, DDA_steps, label="ЦДА")
+    # plt.plot(angles, BrezenhemInteger_steps, '--', label="Брензенхем с целыми или\nдействительными коэффицентами")
+    # plt.plot(angles, BrezenhemInteger_steps, '.', label="Брензенхем с устр\nступенчатости")
+    # plt.plot(angles, VU_steps, '-.', label="By")
+    # plt.title("Исследование ступенчатости.\n{0} - длина отрезка".format(length))
+    # plt.xticks(np.arange(91, step=5))
+    # plt.legend()
+    # plt.ylabel("Количество ступенек")
+    # plt.xlabel("Угол в градусах")
+    #
+    # plt.subplot(2, 3, 2)
+    # plt.title("ЦДА")
+    # plt.plot(angles, DDA_steps)
+    # plt.xticks(np.arange(91, step=5))
+    # plt.ylabel("Количество ступенек")
+    # plt.xlabel("Угол в градусах")
+    #
+    # plt.subplot(2, 3, 3)
+    # plt.title("BУ")
+    # plt.plot(angles, VU_steps)
+    # plt.xticks(np.arange(91, step=5))
+    # plt.ylabel("Количество ступенек")
+    # plt.xlabel("Угол в градусах")
+    #
+    # plt.subplot(2, 3, 4)
+    # plt.title("Брензенхем с действительными коэффицентами")
+    # plt.plot(angles, BrezenhemFloat_steps)
+    # plt.xticks(np.arange(91, step=5))
+    # plt.ylabel("Количество ступенек")
+    # plt.xlabel("Угол в градусах")
+    #
+    # plt.subplot(2, 3, 5)
+    # plt.title("Брензенхем с целыми коэффицентами")
+    # plt.plot(angles, BrezenhemInteger_steps)
+    # plt.xticks(np.arange(91, step=5))
+    # plt.ylabel("Количество ступенек")
+    # plt.xlabel("Угол в градусах")
+    #
+    # plt.subplot(2, 3, 6)
+    # plt.title("Брензенхем с устр. ступенчатости")
+    # plt.plot(angles, BrezenhemSmooth_steps)
+    # plt.xticks(np.arange(91, step=5))
+    # plt.ylabel("Количество ступенек")
+    # plt.xlabel("Угол в градусах")
+    #
+    # plt.show()
 
 root = tk.Tk()
 root.title("Lab №3")
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
-WINDOW_W = screen_width
-WINDOW_H = screen_height
 
 root.geometry(str(WINDOW_W) + "x" + str(WINDOW_H))
 root["bg"] = MAIN_COLOUR
-root.resizable(False, False)
+root.resizable(True, True)
 
+#UI
 if __name__ == "__main__":
     # INPUT DATA FRAME
 
@@ -259,7 +235,7 @@ if __name__ == "__main__":
     # ВЫБОР АЛГОРИТМА
 
     algorithmsLabel = tk.Label(dataFrame, bg=MAIN_COLOUR_LABEL_BG, text="АЛГОРИТМЫ ПОСТРОЕНИЯ",
-                        font=("Consolas", 16),
+                        font=("Consolas", FONT_HEAD),
                         fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
 
     algorithmsArr = [("Цифровой дифференциальный анализатор", 0),
@@ -272,7 +248,7 @@ if __name__ == "__main__":
 
     for value in range(len(algorithmsArr)):
         tk.Radiobutton(dataFrame, variable=algorithmsRB, text=algorithmsArr[value][0], value=value, bg=str(MAIN_COLOUR_BUTON_BG),
-                    indicatoron=False, font=("Consolas", 16), justify=tk.LEFT, highlightbackground="black",
+                    indicatoron=False, font=("Consolas", FONT_BUTTON), justify=tk.LEFT, highlightbackground="black",
                     ).place(x=10, y=(value + 1) * FRAME_H // COLUMNS, width=FRAME_W - 2 * BORDERS_SPACE, height=FRAME_H // COLUMNS)
 
     algorithmsLabel .place(x=0, y=0, width=FRAME_W, height=FRAME_H // COLUMNS)
@@ -282,7 +258,7 @@ if __name__ == "__main__":
     size_colour = (FRAME_W // 1.5) // 8
 
     colourChoiseLabel = tk.Label(dataFrame, bg=MAIN_COLOUR_LABEL_BG, text="ВЫБОР ЦВЕТА",
-                        font=("Consolas", 16),
+                        font=("Consolas", FONT_HEAD),
                         fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
     
     colourChoiseLabel.place(x=0, y=8*FRAME_H // COLUMNS, width=FRAME_W, 
@@ -297,7 +273,7 @@ if __name__ == "__main__":
         CANVAS_COLOUR = colour
         canvasField.configure(bg=CANVAS_COLOUR)
 
-    colour_bg = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Выбор фона:", font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT)
+    colour_bg = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Фон:", font=("Consolas", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT)
     colour_bg.place(x=0, y=9 * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
     
     white_bg = tk.Button(dataFrame, bg="white", activebackground="white", command=lambda: set_bgcolour("white"))
@@ -318,7 +294,7 @@ if __name__ == "__main__":
     green_bg.place(x=FRAME_W // 3 - BORDERS_SPACE + 6 * size_colour, y=9 * FRAME_H // COLUMNS, width=size_colour, height=FRAME_H // COLUMNS)
     lightblue_bg.place(x=FRAME_W // 3 - BORDERS_SPACE + 7 * size_colour, y=9 * FRAME_H // COLUMNS, width=size_colour, height=FRAME_H // COLUMNS)
     
-    bg_colour_change = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Поменять цвет BG", font=("Consolas", 16), command=get_colour_bg)
+    bg_colour_change = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Поменять цвет BG", font=("Consolas", FONT_BUTTON), command=get_colour_bg)
     bg_colour_change.place(x=FRAME_W // 3 - BORDERS_SPACE, y=10 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
     #-----------------------------------------------------------------------------------------------------------------------
     def get_colour_line():
@@ -331,12 +307,12 @@ if __name__ == "__main__":
         cur_colour_line.configure(bg=LINE_COLOUR)
 
     cur_colour_text_label = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Текущий цвет линии:",
-                     font=("Consolas", 14),
+                     font=("Consolas", FONT_LABEL),
                      fg=MAIN_COLOUR_LABEL_TEXT)
     cur_colour_line = tk.Label(dataFrame, bg="black")
-    cur_colour_text_label.place(x=FRAME_W // 3 - BORDERS_SPACE, y=13 * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
+    cur_colour_text_label.place(x=BORDERS_SPACE, y=13 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
     cur_colour_line.place(x=FRAME_W // 3 - BORDERS_SPACE + FRAME_W // 2, y=13 * FRAME_H // COLUMNS, width=size_colour, height=FRAME_H // COLUMNS)
-    colour_line = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Выбор линии:", font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT)
+    colour_line = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Линия:", font=("Consolas", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT)
     colour_line.place(x=0, y=11 * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
 
     white_line = tk.Button(dataFrame, bg="white", activebackground="white", command=lambda: set_line_colour("white"))
@@ -357,23 +333,24 @@ if __name__ == "__main__":
     green_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 6 * size_colour, y=11 * FRAME_H // COLUMNS, width=size_colour, height=FRAME_H // COLUMNS)
     lightblue_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 7 * size_colour, y=11 * FRAME_H // COLUMNS, width=size_colour, height=FRAME_H // COLUMNS)
 
-    line_colour_change = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Поменять цвет LINE", font=("Consolas", 16), command=get_colour_line)
+    line_colour_change = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Поменять цвет LINE", font=("Consolas", 11), command=get_colour_line)
     line_colour_change.place(x=FRAME_W // 3 - BORDERS_SPACE, y=12 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # DRAW LINE
     lineMakeLabel = tk.Label(dataFrame, bg=MAIN_COLOUR_LABEL_BG, text="ПОСТРОЕНИЕ ЛИНИИ",
-                     font=("Consolas", 16),
+                     font=("Consoles", FONT_HEAD),
                      fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
 
-    argumnetsLabel = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Xн         Yн         Xк          Yк",
-                        font=("Consolas", 14),
+    argumnetsLabel = tk.Label(dataFrame, bg=FRAME_COLOUR,
+                        text=("Xн{0}Yн{0}Xк{0}Yк".format(" " * int(FRAME_W // 3 // FONT_LABEL), " " * int(FRAME_W // 8 // FONT_LABEL))),
+                        font=("Consoles", FONT_LABEL),
                         fg=MAIN_COLOUR_LABEL_TEXT)
 
-    xsEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
-    ysEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
-    xeEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
-    yeEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
-    drawLineBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить линию", font=("Consolas", 14),
+    xsEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
+    ysEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
+    xeEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
+    yeEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
+    drawLineBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить линию", font=("Consolas", 12),
                              command=drawLine)
 
 
@@ -383,20 +360,20 @@ if __name__ == "__main__":
     ysEntry.place(x=FRAME_W // 4, y=16 * FRAME_H // COLUMNS, width=FRAME_W // 4, height=FRAME_H // COLUMNS)
     xeEntry.place(x=2 * FRAME_W // 4, y=16 * FRAME_H // COLUMNS, width=FRAME_W // 4, height=FRAME_H // COLUMNS)
     yeEntry.place(x=3 * FRAME_W // 4, y=16 * FRAME_H // COLUMNS, width=FRAME_W // 4, height=FRAME_H // COLUMNS)
-    drawLineBtn.place(x=FRAME_W // 2 / 2.5, y=18 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
+    drawLineBtn.place(x=FRAME_W // 2 // 3, y=18 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
 
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # DRAW SPECTOR
-    lineColourLabel = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Угол поворота (в градуссах):",
-                        font=("Consolas", 14),
+    lineColourLabel = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Угол (в градуссах):",
+                        font=("Consolas", FONT_LABEL),
                         fg=MAIN_COLOUR_LABEL_TEXT)
-    angleEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
-    drawSpnBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить спектр", font=("Consolas", 14),
+    angleEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", FONT_ENTRY), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
+    drawSpnBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить спектр", font=("Consolas", FONT_BUTTON),
                         command=drawSpector)
 
     lineColourLabel.place(x=0, y=17 * FRAME_H // COLUMNS, width=3 * FRAME_W // 4, height=FRAME_H // COLUMNS)
     angleEntry.place(x=3 * FRAME_W // 4, y=17 * FRAME_H // COLUMNS, width=FRAME_W // 4, height=FRAME_H // COLUMNS)
-    drawSpnBtn.place(x=FRAME_W // 2 / 2.5, y=19 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
+    drawSpnBtn.place(x=FRAME_W // 2 // 3, y=19 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # INFO & STATS
     def show_info():
@@ -421,25 +398,30 @@ if __name__ == "__main__":
                             'при построении отрезков определенной длины.')
 
 
-    lineLengthLabel = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Длина линии:",
-                        font=("Consolas", 14),
-                        fg=MAIN_COLOUR_LABEL_TEXT)
-    lengthEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", 14), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
+    StatsLabel = tk.Label(dataFrame, bg=MAIN_COLOUR_LABEL_BG, text="АНАЛИЗ",
+                             font=("Consolas", FONT_HEAD),
+                             fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
 
-    compareTimenBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Сравнения времени", font=("Consolas", 14),
+    lineLengthLabel = tk.Label(dataFrame, bg=FRAME_COLOUR, text="Длина линии:",
+                        font=("Consolas", FONT_LABEL),
+                        fg=MAIN_COLOUR_LABEL_TEXT)
+    lengthEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", FONT_ENTRY), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
+
+    compareTimenBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Сравнения времени", font=("Consolas", FONT_BUTTON),
                                 command=timeInput)
-    compareGradationBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Сравнения ступенчатости", font=("Consolas", 14),
+    compareGradationBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Сравнения ступенчатости", font=("Consolas", FONT_BUTTON),
                                     command=stepInput)
-    clearCanvasBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Очистить экран", font=("Consolas", 14), command=clearScreen)
-    infoBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Справка", font=("Consolas", 14),
+    clearCanvasBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Очистить экран", font=("Consolas", FONT_BUTTON), command=clearScreen)
+    infoBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Справка", font=("Consolas", FONT_BUTTON),
                         command=show_info)
 
-    lineLengthLabel.place(x=0, y=22 * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
-    lengthEntry.place(x=FRAME_W // 3, y=22 * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
-    compareTimenBtn.place(x=20, y=23 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
-    compareGradationBtn.place(x=20, y=24 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
-    clearCanvasBtn.place(x=20, y=25 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
-    infoBtn.place(x=20, y=26 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
+    StatsLabel.place(x=0, y=20 * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
+    lineLengthLabel.place(x=0, y=21 * FRAME_H // COLUMNS, width=2 * FRAME_W // 3, height=FRAME_H // COLUMNS)
+    lengthEntry.place(x=2 * FRAME_W // 3, y=21 * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
+    compareTimenBtn.place(x=20, y=22 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
+    compareGradationBtn.place(x=20, y=23 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
+    clearCanvasBtn.place(x=20, y=24 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
+    infoBtn.place(x=20, y=25 * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # CANVAS
     canvasField = tk.Canvas(root, bg=CANVAS_COLOUR)
