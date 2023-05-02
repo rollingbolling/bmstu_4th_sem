@@ -15,7 +15,6 @@ def close_plt():
 def time_bar(length, canvasField):
     close_plt()
     plt.figure("Исследование времени работы алгоритмов", figsize=(PLOT_W, PLOT_H))
-    print(PLOT_W, PLOT_H)
     times = list()
     angle = 1
     pb = [375, 200]

@@ -53,63 +53,63 @@ def place_bg_colour_choice(frame, canvas, size_colour, start_column):
 
 
 def place_line_colour_choice(frame, size_colour, start_column):
-    def get_colour_circle():
-        colour = colorchooser.askcolor(title="Choose colour circle")
-        set_circle_colour(colour[-1])
+    def get_colour_line():
+        colour = colorchooser.askcolor(title="Choose colour line")
+        set_line_colour(colour[-1])
 
-    def set_circle_colour(colour):
+    def set_line_colour(colour):
         global LINE_COLOUR
         LINE_COLOUR = colour
-        cur_colour_circle.configure(bg=LINE_COLOUR)
+        cur_colour_line.configure(bg=LINE_COLOUR)
 
-    cur_colour_text_label = tk.Label(frame, bg=FRAME_COLOUR, text="Текущий цвет окруж.:",
+    cur_colour_text_label = tk.Label(frame, bg=FRAME_COLOUR, text="Текущий цвет LINE:",
                                      font=("Consoles", FONT_LABEL),
                                      fg=MAIN_COLOUR_LABEL_TEXT)
-    cur_colour_circle = tk.Label(frame, bg="black")
+    cur_colour_line = tk.Label(frame, bg="black")
     cur_colour_text_label.place(x=BORDERS_SPACE, y=(start_column + 2) * FRAME_H // COLUMNS, width=FRAME_W // 1.5,
                                 height=FRAME_H // COLUMNS)
-    cur_colour_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + FRAME_W // 2, y=(start_column + 2) * FRAME_H // COLUMNS, width=size_colour,
+    cur_colour_line.place(x=FRAME_W // 3 - BORDERS_SPACE + FRAME_W // 2, y=(start_column + 2) * FRAME_H // COLUMNS, width=size_colour,
                             height=FRAME_H // COLUMNS)
-    colour_circle = tk.Label(frame, bg=FRAME_COLOUR, text="Окруж.:", font=("Consoles", FONT_LABEL),
+    colour_line = tk.Label(frame, bg=FRAME_COLOUR, text="LINE:", font=("Consoles", FONT_LABEL),
                              fg=MAIN_COLOUR_LABEL_TEXT)
-    colour_circle.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
+    colour_line.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
 
-    white_circle = tk.Button(frame, bg="white", activebackground="white",
-                             command=lambda: set_circle_colour("white"))
-    yellow_circle = tk.Button(frame, bg="yellow", activebackground="yellow",
-                              command=lambda: set_circle_colour("yellow"))
-    orange_circle = tk.Button(frame, bg="orange", activebackground="orange",
-                              command=lambda: set_circle_colour("orange"))
-    red_circle = tk.Button(frame, bg="red", activebackground="red", command=lambda: set_circle_colour("red"))
-    purple_circle = tk.Button(frame, bg="purple", activebackground="purple",
-                              command=lambda: set_circle_colour("purple"))
-    light_green_circle = tk.Button(frame, bg="light green", activebackground="light green",
-                                   command=lambda: set_circle_colour("light green"))
-    green_circle = tk.Button(frame, bg="green", activebackground="green",
-                             command=lambda: set_circle_colour("green"))
-    light_blue_circle = tk.Button(frame, bg="light blue", activebackground="light blue",
-                                  command=lambda: set_circle_colour("light blue"))
+    white_line = tk.Button(frame, bg="white", activebackground="white",
+                             command=lambda: set_line_colour("white"))
+    yellow_line = tk.Button(frame, bg="yellow", activebackground="yellow",
+                              command=lambda: set_line_colour("yellow"))
+    orange_line = tk.Button(frame, bg="orange", activebackground="orange",
+                              command=lambda: set_line_colour("orange"))
+    red_line = tk.Button(frame, bg="red", activebackground="red", command=lambda: set_line_colour("red"))
+    purple_line = tk.Button(frame, bg="purple", activebackground="purple",
+                              command=lambda: set_line_colour("purple"))
+    light_green_line = tk.Button(frame, bg="light green", activebackground="light green",
+                                   command=lambda: set_line_colour("light green"))
+    green_line = tk.Button(frame, bg="green", activebackground="green",
+                             command=lambda: set_line_colour("green"))
+    light_blue_line = tk.Button(frame, bg="light blue", activebackground="light blue",
+                                  command=lambda: set_line_colour("light blue"))
 
-    white_circle.place(x=FRAME_W // 3 - BORDERS_SPACE, y=start_column * FRAME_H // COLUMNS, width=size_colour,
+    white_line.place(x=FRAME_W // 3 - BORDERS_SPACE, y=start_column * FRAME_H // COLUMNS, width=size_colour,
                        height=FRAME_H // COLUMNS)
-    yellow_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
+    yellow_line.place(x=FRAME_W // 3 - BORDERS_SPACE + size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
                         height=FRAME_H // COLUMNS)
-    orange_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + 2 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
+    orange_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 2 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
                         height=FRAME_H // COLUMNS)
-    red_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + 3 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
+    red_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 3 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
                      height=FRAME_H // COLUMNS)
-    purple_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + 4 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
+    purple_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 4 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
                         height=FRAME_H // COLUMNS)
-    light_green_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + 5 * size_colour, y=start_column * FRAME_H // COLUMNS,
+    light_green_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 5 * size_colour, y=start_column * FRAME_H // COLUMNS,
                              width=size_colour, height=FRAME_H // COLUMNS)
-    green_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + 6 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
+    green_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 6 * size_colour, y=start_column * FRAME_H // COLUMNS, width=size_colour,
                        height=FRAME_H // COLUMNS)
-    light_blue_circle.place(x=FRAME_W // 3 - BORDERS_SPACE + 7 * size_colour, y=start_column * FRAME_H // COLUMNS,
+    light_blue_line.place(x=FRAME_W // 3 - BORDERS_SPACE + 7 * size_colour, y=start_column * FRAME_H // COLUMNS,
                             width=size_colour, height=FRAME_H // COLUMNS)
 
-    circle_colour_change = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Поменять цвет CIRCLE",
-                                     font=("Consoles", 11), command=get_colour_circle)
-    circle_colour_change.place(x=FRAME_W // 3 - BORDERS_SPACE, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W // 1.5,
+    line_colour_change = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Поменять цвет LINE",
+                                     font=("Consoles", 11), command=get_colour_line)
+    line_colour_change.place(x=FRAME_W // 3 - BORDERS_SPACE, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W // 1.5,
                                height=FRAME_H // COLUMNS)
 
 
@@ -269,25 +269,7 @@ def place_analys_block(frame, time_analys_circle, time_analys_ellipse, start_col
 
 def place_clear_info_block(frame, clear_screen, start_column):
     def show_info():
-        messagebox.showinfo('Информация',
-                            'С помощью данной программы можно построить отрезки 6 способами:\n'
-                            '1) методом цифрового дифференциального анализатора;\n'
-                            '2) методом Брезенхема с действитльными коэфициентами;\n'
-                            '3) методом Брезенхема с целыми коэфициентами;\n'
-                            '4) методом Брезенхема с устранением ступенчатости;\n'
-                            '5) методом Ву;\n'
-                            '6) стандартым методом.\n'
-                            '\nДля построения отрезка необходимо задать его начало\n'
-                            'и конец и выбрать метод построения из списка предложенных.\n'
-                            '\nДля построения спектра (пучка отрезков)\n'
-                            'необходимо задать начало и конец,\n'
-                            'выбрать метод для построения,\n'
-                            'а также угол поворота отрезка.\n'
-                            '\nДля анализа ступенчатости достаточно нажать на кнопку "Сравнение ступенчатости".\n'
-                            'Анализ ступенчатости и времени исполнения приводится\n'
-                            'в виде графиков pyplot.\n'
-                            'Введите длину отрезка, если хотите сделать анализ программы\n'
-                            'при построении отрезков определенной длины.')
+        messagebox.showinfo()
 
     clearCanvasBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Очистить экран",
                                font=("Consoles", FONT_BUTTON), command=clear_screen)

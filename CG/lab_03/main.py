@@ -134,87 +134,9 @@ def close_plt():
     plt.figure("Исследование ступенчатости алгоритмов построение.")
     plt.close()
 
-# def step_bar(length):
-    # close_plt()
-    #
-    # angle = 0
-    # step = 2
-    # pb = [0, 0]
-    # pe = [pb[0], pb[1] + length]
-    #
-    # angles = []
-    # DDA_steps = []
-    # BrezenhemInteger_steps = []
-    # BrezenhemFloat_steps = []
-    # BrezenhemSmooth_steps = []
-    # VU_steps = []
-    #
-    # for j in range(90 // step):
-    #     DDA_steps.append(DDA(pb[0], pb[1], pe[0], pe[1], stepmode=True))
-    #     BrezenhemInteger_steps.append(BrezenhemInt(pb[0], pb[1], pe[0], pe[1], stepmode=True))
-    #     BrezenhemFloat_steps.append(BrezenhemFloat(pb[0], pb[1], pe[0], pe[1], stepmode=True))
-    #     BrezenhemSmooth_steps.append(BrezenhemSmooth(canvasField, pb[0], pb[1], pe[0], pe[1], stepmode=True))
-    #     VU_steps.append(VU(canvasField, pb[0], pb[1], pe[0], pe[1], stepmode=True))
-    #
-    #     pe[0], pe[1] = turn_point(radians(step), pe[0], pe[1], pb[0], pb[1])
-    #     angles.append(angle)
-    #     angle += step
-    #
-    # plt.figure("Исследование ступенчатости алгоритмов построение.", figsize=(18, 10))
-    #
-    # plt.subplot(2, 3, 1)
-    # plt.plot(angles, DDA_steps, label="ЦДА")
-    # plt.plot(angles, BrezenhemInteger_steps, '--', label="Брензенхем с целыми или\nдействительными коэффицентами")
-    # plt.plot(angles, BrezenhemInteger_steps, '.', label="Брензенхем с устр\nступенчатости")
-    # plt.plot(angles, VU_steps, '-.', label="By")
-    # plt.title("Исследование ступенчатости.\n{0} - длина отрезка".format(length))
-    # plt.xticks(np.arange(91, step=5))
-    # plt.legend()
-    # plt.ylabel("Количество ступенек")
-    # plt.xlabel("Угол в градусах")
-    #
-    # plt.subplot(2, 3, 2)
-    # plt.title("ЦДА")
-    # plt.plot(angles, DDA_steps)
-    # plt.xticks(np.arange(91, step=5))
-    # plt.ylabel("Количество ступенек")
-    # plt.xlabel("Угол в градусах")
-    #
-    # plt.subplot(2, 3, 3)
-    # plt.title("BУ")
-    # plt.plot(angles, VU_steps)
-    # plt.xticks(np.arange(91, step=5))
-    # plt.ylabel("Количество ступенек")
-    # plt.xlabel("Угол в градусах")
-    #
-    # plt.subplot(2, 3, 4)
-    # plt.title("Брензенхем с действительными коэффицентами")
-    # plt.plot(angles, BrezenhemFloat_steps)
-    # plt.xticks(np.arange(91, step=5))
-    # plt.ylabel("Количество ступенек")
-    # plt.xlabel("Угол в градусах")
-    #
-    # plt.subplot(2, 3, 5)
-    # plt.title("Брензенхем с целыми коэффицентами")
-    # plt.plot(angles, BrezenhemInteger_steps)
-    # plt.xticks(np.arange(91, step=5))
-    # plt.ylabel("Количество ступенек")
-    # plt.xlabel("Угол в градусах")
-    #
-    # plt.subplot(2, 3, 6)
-    # plt.title("Брензенхем с устр. ступенчатости")
-    # plt.plot(angles, BrezenhemSmooth_steps)
-    # plt.xticks(np.arange(91, step=5))
-    # plt.ylabel("Количество ступенек")
-    # plt.xlabel("Угол в градусах")
-    #
-    # plt.show()
 
 root = tk.Tk()
 root.title("Lab №3")
-
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
 
 root.geometry(str(WINDOW_W) + "x" + str(WINDOW_H))
 root["bg"] = MAIN_COLOUR
@@ -370,7 +292,7 @@ if __name__ == "__main__":
     angleEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consolas", FONT_ENTRY), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
     drawSpnBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить спектр", font=("Consolas", FONT_BUTTON),
                         command=drawSpector)
-
+    
     lineColourLabel.place(x=0, y=17 * FRAME_H // COLUMNS, width=3 * FRAME_W // 4, height=FRAME_H // COLUMNS)
     angleEntry.place(x=3 * FRAME_W // 4, y=17 * FRAME_H // COLUMNS, width=FRAME_W // 4, height=FRAME_H // COLUMNS)
     drawSpnBtn.place(x=FRAME_W // 2 // 3, y=19 * FRAME_H // COLUMNS, width=FRAME_W // 1.5, height=FRAME_H // COLUMNS)
