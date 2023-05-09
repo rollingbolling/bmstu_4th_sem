@@ -20,11 +20,11 @@ SSEG SEGMENT para STACK 'STACK'
 SSEG ENDS
 ;сегмент с матрицей
 DSEGMATRIX SEGMENT para public 'DATA'
-	N db 0
-	M db 0
-    ZERO db 0
-    ZERO_C db 0
-    ZERO_CUR db 0
+	N db 0;row
+	M db 0;column
+    ZERO_CUR db 0;curent amount zeros
+    ZERO_COUNTER db 0;amount zeros in column
+    ZERO_INDEX db 0;column to delete index
     M_MAX db 9
     N_MAX db 9
 	MATRIX db 9 * 9 dup(0)
@@ -165,14 +165,16 @@ count_zeros proc
         jle out_change
         el_check_loop:
             mov ah, matrix[bx][si]
-            inc si
-            cmp ax, 0
+            add si, 9
+            ;inc si
+            cmp ah, 0
             jle increm
             loop el_check_loop
-        inc bl
+        
         mov ah, ZERO_CUR
-        cmp ZERO, ah
-        jl swap
+        cmp ZERO_COUNTER, ah
+        jle swap
+        inc bl
         pop cx
         loop count_column_loop
     ret
@@ -180,11 +182,14 @@ count_zeros endp
 
 swap:
     xchg ah, ZERO_CUR
-    xchg ah, ZERO
-    mov ZERO_C, bl
+    xchg ah, ZERO_COUNTER
+    mov ZERO_INDEX, bl
+    ret
 
 increm:
-    inc ZERO_CUR
+    add ZERO_CUR, 1
+    ret
+
 
 out_proc:   ; вывход из процедуры по неверным данным 
     ret
@@ -196,13 +201,16 @@ out_change: ; выход если в цикле по чтению, выводу 
 change_matrix proc   ; процедура обмена 1 и 2, 3 и 4 - элементами
 
     mov ax, 0
-    mov bl, 2 ; считаем количество обменов для цикла exchange_element_loop
+    ;mov bl, 2 ; считаем количество обменов для цикла exchange_element_loop
     mov al, N
-    div bl 
+    ;div bl 
     
     mov cx, 0
     mov cl, M
     mov bx, 0
+    add bl, ZERO_INDEX
+
+
     
     cmp cx, 0
     jle out_proc
@@ -218,12 +226,13 @@ change_matrix proc   ; процедура обмена 1 и 2, 3 и 4 - элем
 
         exchange_element_loop:            
             xchg ah, matrix[bx][si]     ; обмен элементами
-            xchg ah, matrix[bx][si+1]
+            xchg ah, matrix[bx][si+9]
             xchg ah, matrix[bx][si]
             
-            add si, 2
+            add si, 3
             loop exchange_element_loop  
-        add bl, N_MAX
+        ;add bl, N_MAX
+        inc bl
         pop cx
         loop row_loop
          
@@ -257,6 +266,10 @@ main:
     
     call read_matrix
     
+    call count_zeros
+    mov dx, offset ZERO_CUR
+    call print_number
+    call newline_print
     call change_matrix
     
     mov dx, offset RESULTMSG
