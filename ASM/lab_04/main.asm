@@ -108,12 +108,12 @@ read_matrix proc           ; процедура чтения матрицы
         read_element_loop:       ; чтение элементов
             call read_number
             mov matrix[bx][si], dh      ; записываем число в матрицу из dh, так как прочитали туда
-            ;inc si                      ; si++
-            add si, 9
+            inc si                      ; si++
+            ;add si, 9
             loop read_element_loop     
         call newline_print              ; вывод новой строки
-        ;add bl, M_MAX                   ; bx + M_MAX  
-        add bl, 1   
+        add bl, M_MAX                   ; bx + M_MAX  
+        ;add bl, 1   
         pop cx                          ; достаем из стека cx
         loop read_row_loop              
        
@@ -139,15 +139,17 @@ print_matrix proc        ; процедура вывода матрицы
         print_element_loop:
             mov dh, matrix[bx][si]        ; в dh кладем само значение чтобы предать в print_matrix
             call print_number
-            add si, 9
+            inc si 
+            ;add si, 9
             loop print_element_loop
         call newline_print
-        inc bl    
+        add bl, M_MAX
         pop cx
         loop print_row_loop
         
     ret
 print_matrix endp
+
 
 count_zeros proc
     mov cx, 0
@@ -165,30 +167,47 @@ count_zeros proc
         jle out_change
         el_check_loop:
             mov ah, matrix[bx][si]
-            add si, 9
             ;inc si
+            add si, 9
             cmp ah, 0
             jle increm
             loop el_check_loop
-        
+
+        cmp cx, 0
+        jle skip 
+        increm:
+            add ZERO_CUR, 1
+            sub cx, 1
+            cmp cx, 0
+            jg el_check_loop
+        skip:
         mov ah, ZERO_CUR
         cmp ZERO_COUNTER, ah
-        jle swap
-        inc bl
+        jl swap
+        add bl, 1
+        ;add bl, M_MAX
         pop cx
         loop count_column_loop
+    cmp cx, 0
+    jle out_proc 
+    swap:
+        xchg ah, ZERO_CUR
+        xchg ah, ZERO_COUNTER
+        ;mov di, bl
+        mov ZERO_INDEX, bl
+        
+        add bl, 1
+        pop cx
+        sub cx, 1
+        cmp cx, 0
+        jg count_column_loop
+    
     ret
 count_zeros endp
 
-swap:
-    xchg ah, ZERO_CUR
-    xchg ah, ZERO_COUNTER
-    mov ZERO_INDEX, bl
-    ret
 
-increm:
-    add ZERO_CUR, 1
-    ret
+
+
 
 
 out_proc:   ; вывход из процедуры по неверным данным 
@@ -198,17 +217,16 @@ out_change: ; выход если в цикле по чтению, выводу 
    pop cx
    ret
 
-change_matrix proc   ; процедура обмена 1 и 2, 3 и 4 - элементами
+change_matrix proc   
 
     mov ax, 0
     ;mov bl, 2 ; считаем количество обменов для цикла exchange_element_loop
-    mov al, N
-    ;div bl 
+    mov al, M
     
     mov cx, 0
-    mov cl, M
+    mov cl, N
+    ;mov ah, ZERO_INDEX
     mov bx, 0
-    add bl, ZERO_INDEX
 
 
     
@@ -217,22 +235,27 @@ change_matrix proc   ; процедура обмена 1 и 2, 3 и 4 - элем
     
     row_loop:
         push cx   
-        
-        mov si, 0
+        ;mov ah, ZERO_INDEX
+        ;mov si, ah
+        mov si, 0 ; номер столбца
+        mov cx, 0
+        mov cl, ZERO_INDEX
+        loop1:
+            add si, 1
+            loop loop1
         mov cl, al 
         
         cmp cx, 0
         jle out_change
 
-        exchange_element_loop:            
+        exchange_element_loop:
             xchg ah, matrix[bx][si]     ; обмен элементами
-            xchg ah, matrix[bx][si+9]
+            xchg ah, matrix[bx][si+1]
             xchg ah, matrix[bx][si]
             
-            add si, 3
+            add si, 1
             loop exchange_element_loop  
-        ;add bl, N_MAX
-        inc bl
+        add bl, M_MAX
         pop cx
         loop row_loop
          
@@ -267,9 +290,10 @@ main:
     call read_matrix
     
     call count_zeros
-    mov dx, offset ZERO_CUR
-    call print_number
-    call newline_print
+    ;mov dx, offset ZERO_INDEX
+    ;call print_number
+    ;call newline_print
+    
     call change_matrix
     
     mov dx, offset RESULTMSG
