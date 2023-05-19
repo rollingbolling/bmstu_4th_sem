@@ -1,7 +1,169 @@
 from ui import *
-
+from algos import *
+from time_measure import time_comparison
 
 # BUTTON_FUNCS
+def draw_circle():
+    xc = xcEntry.get()
+    yc = ycEntry.get()
+    r = circle_radEntry.get()
+
+    if not xc or not yc:
+        messagebox.showwarning("ERROR", "Center not entered")
+    elif not r:
+        messagebox.showwarning("ERROR", "Radius not entered")
+    else:
+        try:
+            xc = int(xc)
+            yc = int(yc)
+        except ValueError():
+            messagebox.showwarning("ERROR", "Incorect input of center coords")
+        try:
+            r = int(r)
+            if r <= 0:
+                messagebox.showwarning("ERROR", "Incorect value of radius")
+        except ValueError():
+            messagebox.showwarning("ERROR", "Incorect radius input")
+        add_circle(canvasField, algorithms_rb, xc, yc, r, LINE_COLOUR)
+
+def draw_ellipse():
+    xc = xcEntry.get()
+    yc = ycEntry.get()
+    ra = ellipse_wEntry.get()
+    rb = ellipse_hEntry.get()
+
+    if not xc or not yc:
+        messagebox.showwarning("ERROR", "Center not entered")
+    elif not ra:
+        messagebox.showwarning("ERROR", "Width not entered")
+    elif not rb:
+        messagebox.showwarning("ERROR", "Height not entered")
+    else:
+        try:
+            xc = int(xc)
+            yc = int(yc)
+        except ValueError():
+            messagebox.showwarning("ERROR", "Incorect input of center coords")
+        try:
+            ra = int(ra)
+            rb = int(rb)
+            if ra <= 0 or rb <= 0:
+                messagebox.showwarning("ERROR", "Incorect value of width or height")
+        except ValueError():
+            messagebox.showwarning("ERROR", "Incorect width or height input")
+        add_ellipse(canvasField, algorithms_rb, xc, yc, ra, rb, LINE_COLOUR)
+
+def draw_spectrum(mode):
+
+    xc = xcEntry.get()
+    yc = ycEntry.get()
+
+    if not xc or not yc:
+        messagebox.showwarning('Ошибка ввода',
+                               'Не заданы координаты центра фигуры!')
+    else:
+        try:
+            xc = int(xc)
+            yc = int(yc)
+        except ValueError:
+            messagebox.showwarning("Ошибка",
+                                   "Неверно заданы координаты центра (Xc, Yc) фигуры!\n"
+                                   "Ожидался ввод целых чисел.")
+            return
+
+        step = figurespecStepEntry.get()
+        count = figurespecAmountEntry.get()
+        if not step:
+            messagebox.showwarning('Ошибка ввода',
+                                   'Не задан шаг изменения!')
+        elif not count:
+            messagebox.showwarning('Ошибка ввода',
+                                   'Не заданo количество фигур!')
+        else:
+            try:
+                step = int(step)
+                if step <= 0:
+                    messagebox.showwarning("Ошибка",
+                                           "Неверно заданы шаг изменения фигуры не может быть меньше 1 при построении спектра!\n")
+                    return
+            except ValueError:
+                messagebox.showwarning("Ошибка",
+                                       "Неверно заданы шаг изменения фигуры при построении спектра!\n"
+                                       "Ожидался ввод целых чисел.")
+                return
+            try:
+                count = int(count)
+                if count <= 0:
+                    messagebox.showwarning("Ошибка",
+                                           "Неверно заданы кол-во фигур не может быть меньше 1 при построении спектра!\n")
+                    return
+            except ValueError:
+                messagebox.showwarning("Ошибка",
+                                       "Неверно заданы кол-во фигур при построении спектра!\n"
+                                       "Ожидался ввод целых чисел.")
+                return
+            if mode == "circle":
+
+                rs = circlespec_radEntry.get()
+                if not rs:
+                    messagebox.showwarning('Ошибка ввода',
+                                           'Не заданo начальный радиус окружности для построения спектра!')
+                else:
+                    try:
+                        rs = int(rs)
+                        if rs <= 0:
+                            messagebox.showwarning("Ошибка",
+                                                   "Неверно задан начальный радиус окружности не может быть меньше 1 для построения спектра!\n")
+                            return
+                    except ValueError:
+                        messagebox.showwarning("Ошибка",
+                                               "Неверно задан начальный радиус окружности для построения спектра!\n"
+                                               "Ожидался ввод целого числа.")
+                        return
+
+                    value_alg = algorithms_rb.get()
+                    if value_alg == 0:
+                        spectrumCircleBy_algorith(canvasField, canonic_circle, xc, yc, rs, step, count, LINE_COLOUR)
+                    elif value_alg == 1:
+                        spectrumCircleBy_algorith(canvasField, parametric_circle, xc, yc, rs, step, count, LINE_COLOUR)
+                    elif value_alg == 2:
+                        spectrumCircleBy_algorith(canvasField, midpoint_circle, xc, yc, rs, step, count, LINE_COLOUR)
+                    elif value_alg == 3:
+                        spectrumCircleBy_algorith(canvasField, brezenhem_circle, xc, yc, rs, step, count, LINE_COLOUR)
+                    elif value_alg == 4:
+                        spectrumBy_standart(canvasField, xc, yc, rs, rs, step, count, LINE_COLOUR)
+            elif mode == "ellipse":
+                ra = ellipsespec_wEntry.get()
+                rb = ellipsespec_hEntry.get()
+                if not ra or not rb:
+                    messagebox.showwarning('Ошибка ввода',
+                                           'Не заданo начальные радиусы эллипса для построения спектра!')
+                else:
+                    try:
+                        ra = int(ra)
+                        rb = int(rb)
+                        if ra <= 0 or rb <= 0:
+                            messagebox.showwarning("Ошибка",
+                                                   "Неверно задан начальные радиусы эллипса не могут быть меньше 1 для построения спектра!\n")
+                            return
+                    except ValueError:
+                        messagebox.showwarning("Ошибка",
+                                               "Неверно задан начальные радиусы эллипса для построения спектра!\n"
+                                               "Ожидался ввод целых чисел.")
+                        return
+
+                    value_alg = algorithms_rb.get()
+                    if value_alg == 0:
+                        spectrumEllipseBy_algorith(canvasField, canonic_ellipse, xc, yc, ra, rb, step, count, LINE_COLOUR)
+                    elif value_alg == 1:
+                        spectrumEllipseBy_algorith(canvasField, parametric_ellipse, xc, yc, ra, rb, step, count, LINE_COLOUR)
+                    elif value_alg == 2:
+                        spectrumEllipseBy_algorith(canvasField, midpoint_ellipse, xc, yc, ra, rb, step, count, LINE_COLOUR)
+                    elif value_alg == 3:
+                        spectrumEllipseBy_algorith(canvasField, brezenhem_ellipse, xc, yc, ra, rb, step, count, LINE_COLOUR)
+                    elif value_alg == 4:
+                        spectrumBy_standart(canvasField, xc, yc, ra, rb, step, count, LINE_COLOUR)
+
 def draw_axes():
     colour = "gray"
     canvasField.create_line(0, 3, CANVAS_W, 3, width=1, fill='gray', arrow=tk.LAST)
@@ -121,7 +283,13 @@ if __name__ == "__main__":
                               justify="center")
     ellipse_hEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consoles", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT,
                               justify="center")
-    place_draw_figure_block(dataFrame, xcEntry, ycEntry, circle_radEntry, ellipse_wEntry, ellipse_hEntry, clear_screen(), clear_screen(), 14)
+
+    drawCircleBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить окр.",
+                              font=("Consoles", FONT_BUTTON), command=draw_circle)
+    drawEllipseBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить эллипс",
+                               font=("Consoles", FONT_BUTTON), command=draw_ellipse)
+
+    place_draw_figure_block(dataFrame, xcEntry, ycEntry, circle_radEntry, ellipse_wEntry, ellipse_hEntry, drawCircleBtn, drawEllipseBtn, 14)
 
     # DRAW SPECTOR
     circlespec_radEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consoles", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT,
@@ -134,10 +302,20 @@ if __name__ == "__main__":
                                  justify="center")
     figurespecStepEntry = tk.Entry(dataFrame, bg=FRAME_COLOUR, font=("Consoles", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT,
                                justify="center")
-    place_draw_spectre_block(dataFrame, circlespec_radEntry, ellipsespec_hEntry, ellipse_wEntry, figurespecAmountEntry, figurespecStepEntry, clear_screen(), clear_screen(), 22)
+    drawSpecCircleBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить спектр окр.",
+                                  font=("Consoles", FONT_BUTTON), command=lambda:draw_spectrum("circle"))
+    drawSpecEllipseBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить спектр элип.",
+                                   font=("Consoles", FONT_BUTTON), command=lambda:draw_spectrum("ellipse"))
+    place_draw_spectre_block(dataFrame, circlespec_radEntry, ellipsespec_hEntry, ellipsespec_wEntry, figurespecAmountEntry, figurespecStepEntry, drawSpecCircleBtn, drawSpecEllipseBtn, 22)
 
     # INFO & STATS
-    place_analys_block(dataFrame, clear_screen(), clear_screen(), 29)
-    place_clear_info_block(dataFrame, clear_screen(), 32)
+    compareCircleTimeBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Анализ времени cir.",
+                                     font=("Consolas", FONT_BUTTON),
+                                     command=lambda:time_comparison(canvasField, LINE_COLOUR, "circle"))
+    compareSpecTimeBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Анализ времени el.",
+                                   font=("Consolas", FONT_BUTTON),
+                                   command=lambda:time_comparison(canvasField, LINE_COLOUR, "ellipse"))
+    place_analys_block(dataFrame, compareCircleTimeBtn, compareSpecTimeBtn, 29)
+    place_clear_info_block(dataFrame, clear_screen, 32)
 
 root.mainloop()

@@ -13,10 +13,10 @@ monitor = get_monitors()
 WINDOW_W = monitor[0].width
 WINDOW_H = int(monitor[0].height * 9/10)
 
-FONT_HEAD = 16
-FONT_BUTTON = 12
-FONT_ENTRY = 14
-FONT_LABEL = 14
+FONT_HEAD = 14
+FONT_BUTTON = 10
+FONT_ENTRY = 12
+FONT_LABEL = 12
 
 FRAME_SITUATION = 1/4
 BORDERS_SPACE = 10

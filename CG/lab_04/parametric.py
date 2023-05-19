@@ -8,7 +8,7 @@ def parametric_circle(canvas, xc, yc, r, colour, draw):
         x = xc + r * m.cos(i)
         y = yc + r * m.sin(i)
         if draw:
-            draw_pixels(canvas, [xc, yc, colour], xc, yc, circle=True)
+            draw_pixels(canvas, [x, y, colour], xc, yc, circle=True)
         i += step
 
 def parametric_ellipse(canvas, xc, yc, ra, rb, colour, draw):

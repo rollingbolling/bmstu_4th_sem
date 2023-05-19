@@ -73,7 +73,7 @@ def place_algo_choose(frame, algorithms_rb, start_column):
     algorithms_label.place(x=0, y=start_column, width=FRAME_W, height=FRAME_H // COLUMNS)
 
 
-def place_draw_figure_block(frame, xcEntry, ycEntry, circle_radEntry, ellipse_wEntry, ellipse_hEntry, draw_circle, draw_ellipse, start_column):
+def place_draw_figure_block(frame, xcEntry, ycEntry, circle_radEntry, ellipse_wEntry, ellipse_hEntry, drawCircleBtn, drawEllipseBtn, start_column):
     circleMakeLabel = tk.Label(frame, bg=MAIN_COLOUR_LABEL_BG, text="ПОСТРОЕНИЕ ФИГУРЫ",
                                font=("Consoles", FONT_HEAD),
                                fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
@@ -81,11 +81,6 @@ def place_draw_figure_block(frame, xcEntry, ycEntry, circle_radEntry, ellipse_wE
     argumentsLabel = tk.Label(frame, bg=FRAME_COLOUR,
                               text=("X{0}Y".format(" " * int(FRAME_W // 1.5 // FONT_LABEL))),
                               font=("Consoles", FONT_LABEL), fg=MAIN_COLOUR_LABEL_TEXT)
-
-    drawCircleBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить окр.",
-                              font=("Consoles", FONT_BUTTON), command=draw_circle)
-    drawEllipseBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить эллипс",
-                               font=("Consoles", FONT_BUTTON), command=draw_ellipse)
 
     circleMakeLabel.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
     argumentsLabel.place(x=0, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
@@ -116,7 +111,7 @@ def place_draw_figure_block(frame, xcEntry, ycEntry, circle_radEntry, ellipse_wE
     ellipse_hEntry.place(x=3 * FRAME_W // 4, y=(start_column + 5) * FRAME_H // COLUMNS, width=FRAME_W // 4, height=FRAME_H // COLUMNS)
 
 
-def place_draw_spectre_block(dataFrame, circle_radEntry, ellipse_hEntry, ellipse_wEntry, figureAmountEntry, figureStepEntry, draw_circle_spec, draw_ellipse_spec, start_column):
+def place_draw_spectre_block(dataFrame, circle_radEntry, ellipse_hEntry, ellipse_wEntry, figureAmountEntry, figureStepEntry, drawSpecCircleBtn, drawSpecEllipseBtn, start_column):
     spectreMakeLabel = tk.Label(dataFrame, bg=MAIN_COLOUR_LABEL_BG, text="ПОСТРОЕНИЕ СПЕКТРА",
                                 font=("Consoles", FONT_HEAD),
                                 fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
@@ -146,25 +141,14 @@ def place_draw_spectre_block(dataFrame, circle_radEntry, ellipse_hEntry, ellipse
     figureAmountLabel.place(x=0, y=(start_column + 4) * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
     figureAmountEntry.place(x=FRAME_W // 2, y=(start_column + 4) * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
 
-    drawSpecCircleBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить спектр окр.",
-                                  font=("Consoles", FONT_BUTTON), command=draw_circle_spec)
-    drawSpecEllipseBtn = tk.Button(dataFrame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить спектр элип.",
-                                   font=("Consoles", FONT_BUTTON), command=draw_ellipse_spec)
     drawSpecCircleBtn.place(x=0, y=(start_column + 5) * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
     drawSpecEllipseBtn.place(x=FRAME_W // 2, y=(start_column + 5) * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
 
 
-def place_analys_block(frame, time_analys_circle, time_analys_ellipse, start_column):
+def place_analys_block(frame, compareCircleTimeBtn, compareSpecTimeBtn, start_column):
     StatsLabel = tk.Label(frame, bg=MAIN_COLOUR_LABEL_BG, text="АНАЛИЗ",
                           font=("Consolas", FONT_HEAD),
                           fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
-
-    compareCircleTimeBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Анализ времени cir.",
-                                     font=("Consolas", FONT_BUTTON),
-                                     command=time_analys_circle)
-    compareSpecTimeBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Анализ времени el.",
-                                   font=("Consolas", FONT_BUTTON),
-                                   command=time_analys_ellipse)
 
     StatsLabel.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
     compareCircleTimeBtn.place(x=0, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
@@ -173,7 +157,24 @@ def place_analys_block(frame, time_analys_circle, time_analys_ellipse, start_col
 
 def place_clear_info_block(frame, clear_screen, start_column):
     def show_info():
-        messagebox.showinfo()
+        messagebox.showinfo('Информация',
+                        'С помощью данной программы можно построить окружность или эллипс 5-ми способами:\n'
+                        '1) используя Каноническое уравнение;\n'
+                        '2) используя Параметрическое уравнение;\n'
+                        '3) Алгоритм средней точки;\n'
+                        '4) Алгоритм Брезенхема;\n'
+                        '5) стандартым методом.\n'
+                        '\nДля построения окружности необходимо задать центр (Xc, Yc)\n'
+                        'и радиус R и выбрать метод построения из списка предложенных.\n'
+                        '\nДля построения эллипса необходимо задать центр (Xc, Yc)\n'
+                        'и радиусы Rx и Ry; выбрать метод построения из списка предложенных.\n'
+                        '\nДля построения спектра фигур\n'
+                        'необходимо задать центр фигуры, радиус(ы)\n'
+                        'выбрать метод для построения,\n'
+                        'а также шаг изменения и количество фигур.\n'
+                        '\nДля анализа времени работы построения окружности нужно нажать на кнопку "Сравнение времени построение окружности".\n'
+                        '\nДля анализа времени работы построения эллипса нужно нажать на кнопку "Сравнение времени построение эллипса".\n'
+                        )
 
     clearCanvasBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Очистить экран",
                                font=("Consoles", FONT_BUTTON), command=clear_screen)
