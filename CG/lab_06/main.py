@@ -1,6 +1,7 @@
 from ui import *
 from config import *
-from classPoint import Point
+from algorithms import *
+import time as time
 
 def place_line_colour_choice(frame, size_colour, start_column):
     def get_colour_line():
@@ -24,21 +25,22 @@ def place_line_colour_choice(frame, size_colour, start_column):
                              fg=MAIN_COLOUR_LABEL_TEXT)
     colour_line.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W // 3, height=FRAME_H // COLUMNS)
 
-    white_line = tk.Button(frame, bg="white", activebackground="white",
-                             command=lambda: set_line_colour("white"))
-    yellow_line = tk.Button(frame, bg="yellow", activebackground="yellow",
-                              command=lambda: set_line_colour("yellow"))
-    orange_line = tk.Button(frame, bg="orange", activebackground="orange",
-                              command=lambda: set_line_colour("orange"))
-    red_line = tk.Button(frame, bg="red", activebackground="red", command=lambda: set_line_colour("red"))
-    purple_line = tk.Button(frame, bg="purple", activebackground="purple",
-                              command=lambda: set_line_colour("purple"))
-    light_green_line = tk.Button(frame, bg="light green", activebackground="light green",
-                                   command=lambda: set_line_colour("light green"))
-    green_line = tk.Button(frame, bg="green", activebackground="green",
-                             command=lambda: set_line_colour("green"))
-    light_blue_line = tk.Button(frame, bg="light blue", activebackground="light blue",
-                                  command=lambda: set_line_colour("light blue"))
+    white_line = tk.Button(frame, bg="#fcfcee", activebackground="#fcfcee",
+                             command=lambda: set_line_colour("#fcfcee"))
+    yellow_line = tk.Button(frame, bg="#f39f18", activebackground="#f39f18",
+                              command=lambda: set_line_colour("#f39f18"))
+    orange_line = tk.Button(frame, bg="#ff6800", activebackground="#ff6800",
+                              command=lambda: set_line_colour("#ff6800"))
+    red_line = tk.Button(frame, bg="#ff2400", activebackground="#ff2400", 
+                              command=lambda: set_line_colour("#ff2400"))
+    purple_line = tk.Button(frame, bg="#8b00ff", activebackground="#8b00ff",
+                              command=lambda: set_line_colour("#8b00ff"))
+    light_green_line = tk.Button(frame, bg="#90EE90", activebackground="#90EE90",
+                                   command=lambda: set_line_colour("#90EE90"))
+    green_line = tk.Button(frame, bg="#00FF00", activebackground="#00FF00",
+                             command=lambda: set_line_colour("#00FF00"))
+    light_blue_line = tk.Button(frame, bg="#ADD8E6", activebackground="#ADD8E6",
+                                  command=lambda: set_line_colour("#ADD8E6"))
 
     white_line.place(x=FRAME_W // 3 - BORDERS_SPACE, y=start_column * FRAME_H // COLUMNS, width=size_colour,
                        height=FRAME_H // COLUMNS)
@@ -79,6 +81,8 @@ def clear_screen():
     cur_figure.clear()
     listPoint_scroll.delete(0, tk.END)
     canvasField.delete("all")
+    canvasImg.put(CANVAS_COLOUR, to=(0, 0, int(CANVAS_W), int(CANVAS_H)))
+    canvasField.create_image(CANVAS_W // 2, CANVAS_H // 2, image=canvasImg, state="normal")
 
 def get_point():
     x = xEntry.get()
@@ -94,6 +98,20 @@ def get_point():
             return
         add_point(x, y)
     
+def get_seed():
+    x = xEntry.get()
+    y = yEntry.get()
+    if not x or not y:
+        messagebox.showinfo("Предупреждение!", "Координаты точек не введены!")
+    else:
+        try:
+            x = int(x)
+            y = int(y)
+        except ValueError:
+            messagebox.showinfo("Предупреждение!", "Координаты точек должны быть только целые!")
+            return
+        add_seed(x, y)
+
 def findIndexForListPointScroll(all_figures, cur_figure):
     index = 0
 
@@ -103,10 +121,11 @@ def findIndexForListPointScroll(all_figures, cur_figure):
     index += len(cur_figure)
     return index
 
-def add_point(x, y):
+def add_point(x, y, colour="#000000"):
     if Point(x, y) not in cur_figure:
         if cur_figure:
-             canvasField.create_line(cur_figure[-1].x, cur_figure[-1].y, x, y)
+            #canvasField.create_line(cur_figure[-1].x, cur_figure[-1].y, x, y)
+            draw_line_on_img(canvasImg, cur_figure[-1], Point(x, y), colour)
 
         index = findIndexForListPointScroll(all_figures, cur_figure)
         listPoint_scroll.insert(index,  "{:3d}) X = {:4d}; Y = {:4d}".format(index + 1, x, y))
@@ -114,18 +133,35 @@ def add_point(x, y):
     else:
         messagebox.showwarning("Предупреждение!", "Точка с такими координатами фигуры уже введена!")
 
+def draw_line_on_img(img, ps, pe, colour="#000000"):
+    points = bresenhem_int(ps, pe)
+    for p in points:
+        draw_pixel(img, p.x, p.y, colour)
+
 def add_point_figure_onClick(event):
     x, y = event.x, event.y
-    add_point(x, y)
+    add_point(x, y, BORDER_COLOUR)
 
 def add_seed(x, y):
-    
+    draw_pixel(canvasImg, x+1, y+1, colour="orange")
+    draw_pixel(canvasImg, x+1, y  , colour="orange")
+    draw_pixel(canvasImg, x+1, y-1, colour="orange")
+    draw_pixel(canvasImg, x  , y+1, colour="orange")
+    draw_pixel(canvasImg, x  , y  , colour="orange")
+    draw_pixel(canvasImg, x  , y-1, colour="orange")
+    draw_pixel(canvasImg, x-1, y+1, colour="orange")
+    draw_pixel(canvasImg, x-1, y  , colour="orange")
+    draw_pixel(canvasImg, x-1, y-1, colour="orange")
+
+    listPoint_scroll.insert(tk.END, "SEED PIXEL: ({:4d}, {:4d})".format(x, y))
+
+    seed_points.append(Point(x, y))
 
 def close_figure():
     global cur_figure
     if len(cur_figure) > 2:
-        canvasField.create_line(cur_figure[-1].x, cur_figure[-1].y, cur_figure[0].x, cur_figure[0].y)
-
+        #canvasField.create_line(cur_figure[-1].x, cur_figure[-1].y, cur_figure[0].x, cur_figure[0].y)
+        draw_line_on_img(canvasImg, cur_figure[-1], cur_figure[0], BORDER_COLOUR)
         index = findIndexForListPointScroll(all_figures, cur_figure)
         listPoint_scroll.insert(index, "------------Closed------------")
 
@@ -136,6 +172,7 @@ def close_figure():
     else:
         messagebox.showwarning("Предупреждение!", "Такую фигуру нельзя замкнуть!\nНеобходимо как минимум, чтобы у фигуры было 3 точки!")
 
+#change
 def fill_all_figures():
     global LINE_COLOUR
     if not all_figures and not cur_figure:
@@ -143,11 +180,22 @@ def fill_all_figures():
     elif not all_figures and  cur_figure:
         messagebox.showwarning("Предупреждение!", "Фигура не замкнута для закраски!")
     else:
+        if not seed_points:
+            messagebox.showwarning("Предупреждение!", "Затравочный пиксел не установлен!")
+            return
+        if LINE_COLOUR == BORDER_COLOUR:
+            messagebox.showwarning("Предупреждение!", "Цвет границы и цвет закраски не должны совпадать!")
+            return
+        if LINE_COLOUR == CANVAS_COLOUR:
+            messagebox.showwarning("Предупреждение!", "Цвет границы и цвет фона не должны совпадать!")
+            return
+        
         delay = False
         if methodDraw.get() == 0:
             delay = True
+        print(seed_points)
         time_start = time.time()
-        CAP_algorithm_with_ordered_list_of_edges(canvasField, all_figures, colour=LINE_COLOUR, delay=delay)
+        fill_with_seed(canvasField, canvasImg, BORDER_COLOUR, LINE_COLOUR, seed_points[-1], delay=delay)
         time_end = time.time() - time_start
         if round(time_end * 1000, 2) < 1000:
             timeLabel["text"] = "Время закраски: " + str(round(time_end * 1000, 2)) + " mc."
@@ -156,13 +204,14 @@ def fill_all_figures():
 
 # LAB WINDOW CREATION + SIZE CONFIGURATION
 root = tk.Tk()
-root.title("Lab №5")
+root.title("Lab №6")
 root.geometry(str(WINDOW_W) + "x" + str(WINDOW_H))
 root["bg"] = MAIN_COLOUR
 root.resizable(True, True)
 
 cur_figure = []
 all_figures = []
+seed_points = []
 
 if __name__ == "__main__":
     frame = tk.Frame(root)
@@ -178,8 +227,14 @@ if __name__ == "__main__":
                       width=CANVAS_W,
                       height=CANVAS_H)
     
+    canvasImg = tk.PhotoImage(width=int(CANVAS_W+1), height=int(CANVAS_H+1))
+    canvasField.create_image(CANVAS_W // 2, CANVAS_H // 2, image=canvasImg, state='normal')
+    canvasImg.put(CANVAS_COLOUR, to=(0, 0, int(CANVAS_W), int(CANVAS_H)))
+    
     canvasField.bind("<Button-1>", add_point_figure_onClick)
+    canvasField.bind("<Button-2>", lambda event: add_seed(event.x, event.y))
     canvasField.bind("<Button-3>", lambda event: close_figure())
+    canvasField.bind("<B1-Motion>", add_point_figure_onClick)
     
     
     place_colour_choose_block(frame, 0)
@@ -190,7 +245,7 @@ if __name__ == "__main__":
     xEntry = tk.Entry(frame, bg="white", font=("Consolas", FONT_ENTRY), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
     yEntry = tk.Entry(frame, bg="white", font=("Consolas", FONT_ENTRY), fg=MAIN_COLOUR_LABEL_TEXT, justify="center")
     listPoint_scroll = tk.Listbox(font=("Consolas", FONT_ENTRY))
-    place_draw_point(frame, xEntry, yEntry, listPoint_scroll, get_point, close_figure, 8)
+    place_draw_point(frame, xEntry, yEntry, listPoint_scroll, get_point, close_figure, get_seed, 8)
 
     timeLabel = tk.Label(root, bg="gray", text="Время закраски: ",
                              font=("Consolas", 16),

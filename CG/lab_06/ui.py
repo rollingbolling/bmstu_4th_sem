@@ -26,8 +26,7 @@ def place_clear_info_block(frame, clear_screen, start_column):
     def show_info():
         messagebox.showinfo("Info", 
                             "С помощью этой программы можно построить фигуру и закрасить её.\n"
-                            "Для построения закраски используется алгоритм с упорядоченным списком ребер\n"
-                            "и его реализация САР")
+                            "Для построения закраски используется алгоритм затравки")
 
     clearCanvasBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Очистить экран",
                                font=("Consoles", FONT_BUTTON), command=clear_screen)
@@ -38,7 +37,7 @@ def place_clear_info_block(frame, clear_screen, start_column):
     infoBtn.place(x=20, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W - 40, height=FRAME_H // COLUMNS)
 
 
-def place_draw_point(frame, xEntry, yEntry, listPoint_scroll, get_point, close_figure, start_column):
+def place_draw_point(frame, xEntry, yEntry, listPoint_scroll, get_point, close_figure, get_seed, start_column):
     pointMakeLabel = tk.Label(frame, bg=MAIN_COLOUR_LABEL_BG, text="ПОСТРОЕНИЕ точки",
                             font=("Consolas", FONT_HEAD),
                             fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
@@ -51,6 +50,8 @@ def place_draw_point(frame, xEntry, yEntry, listPoint_scroll, get_point, close_f
                             command=get_point)
     drawCloseBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Замкнуть фигуру", font=("Consolas", FONT_BUTTON),
                             command=close_figure)
+    drawSeedBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Построить затравку", font=("Consolas", FONT_BUTTON), 
+                            command=get_seed)
 
     pointMakeLabel.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
     msgAboutPoint.place(x=0, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
@@ -60,8 +61,9 @@ def place_draw_point(frame, xEntry, yEntry, listPoint_scroll, get_point, close_f
 
     drawPointBtn.place(x=10, y=(start_column + 3.5) * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
     drawCloseBtn.place(x=FRAME_W // 2, y=(start_column + 3.5) * FRAME_H // COLUMNS, width=FRAME_W // 2 - 10, height=FRAME_H // COLUMNS)
+    drawSeedBtn.place(x=FRAME_W // 4, y=(start_column + 4.5) * FRAME_H // COLUMNS, width=FRAME_W // 2, height=FRAME_H // COLUMNS)
 
-    listPoint_scroll.place(x=40, y=(start_column + 5) * FRAME_H // COLUMNS, width=FRAME_W - 60, height=6 * FRAME_H // COLUMNS)
+    listPoint_scroll.place(x=40, y=(start_column + 6) * FRAME_H // COLUMNS, width=FRAME_W - 60, height=6 * FRAME_H // COLUMNS)
 
 
 def place_mouse_mode(frame, fillingBtn, timeLabel, start_column):
