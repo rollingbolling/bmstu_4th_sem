@@ -16,7 +16,7 @@ def place_section_colour_choice(frame, size_colour, start_column):
     cur_colour_text_label = tk.Label(frame, bg=FRAME_COLOUR, text="Текущий цвет:",
                                      font=("Consoles", FONT_LABEL),
                                      fg=MAIN_COLOUR_LABEL_TEXT)
-    cur_colour_line = tk.Label(frame, bg="black")
+    cur_colour_line = tk.Label(frame, bg=LINE_COLOUR)
     cur_colour_text_label.place(x=BORDERS_SPACE, y=(start_column + 2) * FRAME_H // COLUMNS, width=FRAME_W // 1.5,
                                 height=FRAME_H // COLUMNS)
     cur_colour_line.place(x=FRAME_W // 3 - BORDERS_SPACE + FRAME_W // 2, y=(start_column + 2) * FRAME_H // COLUMNS, width=size_colour,
@@ -77,7 +77,7 @@ def place_cliper_colour_choise(frame, size_colour, start_column):
     cur_colour_text_label = tk.Label(frame, bg=FRAME_COLOUR, text="Текущий цвет:",
                                      font=("Consoles", FONT_LABEL),
                                      fg=MAIN_COLOUR_LABEL_TEXT)
-    cur_colour_line = tk.Label(frame, bg="black")
+    cur_colour_line = tk.Label(frame, bg=CLIP_COLOUR)
     cur_colour_text_label.place(x=BORDERS_SPACE, y=(start_column + 2) * FRAME_H // COLUMNS, width=FRAME_W // 1.5,
                                 height=FRAME_H // COLUMNS)
     cur_colour_line.place(x=FRAME_W // 3 - BORDERS_SPACE + FRAME_W // 2, y=(start_column + 2) * FRAME_H // COLUMNS, width=size_colour,
@@ -138,7 +138,7 @@ def place_res_colour_choise(frame, size_colour, start_column):
     cur_colour_text_label = tk.Label(frame, bg=FRAME_COLOUR, text="Текущий цвет:",
                                      font=("Consoles", FONT_LABEL),
                                      fg=MAIN_COLOUR_LABEL_TEXT)
-    cur_colour_line = tk.Label(frame, bg="black")
+    cur_colour_line = tk.Label(frame, bg=RES_COLOUR)
     cur_colour_text_label.place(x=BORDERS_SPACE, y=(start_column + 2) * FRAME_H // COLUMNS, width=FRAME_W // 1.5,
                                 height=FRAME_H // COLUMNS)
     cur_colour_line.place(x=FRAME_W // 3 - BORDERS_SPACE + FRAME_W // 2, y=(start_column + 2) * FRAME_H // COLUMNS, width=size_colour,

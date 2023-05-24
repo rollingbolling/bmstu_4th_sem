@@ -86,22 +86,26 @@ def place_mouse_mode(frame, add_hor_vert_section, clip, start_column):
     modeByMouse = tk.Label(frame, bg=MAIN_COLOUR_LABEL_BG, text="ПОСТРОЕНИЕ с помощью мыши",
                                 font=("Consolas", FONT_HEAD),
                                 fg=MAIN_COLOUR_LABEL_TEXT, relief=tk.SOLID)
-    labelTextInfo_1 = tk.Label(frame, bg=FRAME_COLOUR, text="Левая кнопка - добавить отсекатель(Прямоугольник)",
+    labelTextInfo_1 = tk.Label(frame, bg=FRAME_COLOUR, text="Левая кнопка - добавить вершину отсекателя",
                                 font=("Consolas", FONT_LABEL),
                                 fg=MAIN_COLOUR_LABEL_TEXT)
     labelTextInfo_2 = tk.Label(frame, bg=FRAME_COLOUR, text="Правая кнопка - добавить отрезок",
+                                font=("Consolas", FONT_LABEL),
+                                fg=MAIN_COLOUR_LABEL_TEXT)
+    labelTextInfo_3 = tk.Label(frame, bg=FRAME_COLOUR, text="Колесо - закрыть многоугольник",
                                 font=("Consolas", FONT_LABEL),
                                 fg=MAIN_COLOUR_LABEL_TEXT)
     
     modeByMouse.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
     labelTextInfo_1.place(x=0, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
     labelTextInfo_2.place(x=0, y=(start_column + 2) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
+    labelTextInfo_3.place(x=0, y=(start_column + 3) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
 
-    addHorVertSectionBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Добавить горизонтальные \nи вертикальные отрезки", font=("Consolas", FONT_BUTTON),
+    addHorVertSectionBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Добавить параллельные отрезки", font=("Consolas", FONT_BUTTON),
                             command=add_hor_vert_section)
     clipBtn = tk.Button(frame, bg=MAIN_COLOUR, fg=MAIN_COLOUR_LABEL_TEXT, text="Отсечь", font=("Consolas", FONT_BUTTON),
                             command=clip)
-    addHorVertSectionBtn.place(x=FRAME_W // 4, y=(start_column + 3) * FRAME_H // COLUMNS, width=FRAME_W // 2 - 20, height=2 * FRAME_H // COLUMNS)
-    clipBtn.place(x=FRAME_W // 4, y=(start_column + 5) * FRAME_H // COLUMNS, width=FRAME_W // 2 - 20, height=FRAME_H // COLUMNS)
+    addHorVertSectionBtn.place(x=FRAME_W // 4, y=(start_column + 4) * FRAME_H // COLUMNS, width=2 * FRAME_W // 3 - 20, height=2 * FRAME_H // COLUMNS)
+    clipBtn.place(x=FRAME_W // 4, y=(start_column + 6) * FRAME_H // COLUMNS, width=2 * FRAME_W // 3 - 20, height=FRAME_H // COLUMNS)
 
     

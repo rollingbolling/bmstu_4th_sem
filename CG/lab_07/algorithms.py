@@ -1,49 +1,5 @@
 from config import *
 
-# EPS = 1e-6
-
-# class Point:
-#     def __int__(self):
-#         self.x = 0
-#         self.y = 0
-
-#     def __init__(self, x, y):
-#         self.x = x
-#         self.y = y
-
-#     def equal_points(self, x, y):
-#         if (abs(x - self.x) < EPS and abs(y - self.y) < EPS):
-#             return True
-#         return False
-
-#     def get_x(self):
-#         return self.x
-
-#     def get_y(self):
-#         return self.y
-
-#     def set_x(self, x):
-#         self.x = x
-    
-#     def set_y(self, y):
-#         self.y = y
-
-def get_bit_cod_point(rectange, point):
-    bit = 0b0000
-    #   x < x_лев
-    if point[0] < rectange[0]:
-        bit += 0b0001
-    # x > x_прав
-    if point[0] > rectange[1]:
-        bit += 0b0010
-    # y < y_низ
-    if point[1] < rectange[2]:
-        bit += 0b0100
-    # y > y_верх
-    if point[1] > rectange[3]:
-        bit += 0b1000
-    return bit
-
 def T_arr(rect, point):
     x = point[0]
     y = point[1]

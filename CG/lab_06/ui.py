@@ -76,9 +76,13 @@ def place_mouse_mode(frame, fillingBtn, timeLabel, start_column):
     labelTextInfo_2 = tk.Label(frame, bg=FRAME_COLOUR, text="Правая кнопка - замкнуть фигуру",
                                 font=("Consolas", FONT_LABEL),
                                 fg=MAIN_COLOUR_LABEL_TEXT)
+    labelTextInfo_3 = tk.Label(frame, bg=FRAME_COLOUR, text="Колесо - затравочный пиксель",
+                                font=("Consolas", FONT_LABEL),
+                                fg=MAIN_COLOUR_LABEL_TEXT)
     
     modeByMouse.place(x=0, y=start_column * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
     labelTextInfo_1.place(x=0, y=(start_column + 1) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
     labelTextInfo_2.place(x=0, y=(start_column + 2) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
-    fillingBtn.place(x=40, y=(start_column + 3) * FRAME_H // COLUMNS, width=FRAME_W - 80, height=FRAME_H // COLUMNS)
+    labelTextInfo_3.place(x=0, y=(start_column + 3) * FRAME_H // COLUMNS, width=FRAME_W, height=FRAME_H // COLUMNS)
+    fillingBtn.place(x=40, y=(start_column + 4) * FRAME_H // COLUMNS, width=FRAME_W - 80, height=FRAME_H // COLUMNS)
     timeLabel.place(x=FRAME_W + 2 * BORDERS_SPACE, y=CANVAS_H + BORDERS_SPACE - FRAME_H // COLUMNS, width=FRAME_W - 60, height=FRAME_H // COLUMNS)

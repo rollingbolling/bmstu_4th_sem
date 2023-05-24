@@ -200,10 +200,8 @@ def place_colour_choose_block(frame, start_column):
 
 
 def clear_screen():
-    global is_set_rectangle
     canvasField.delete("all")
     lines.clear()
-    is_set_rectangle = False
     clipper_figure.clear()
 
 def click_left(event):

@@ -124,7 +124,6 @@ def findIndexForListPointScroll(all_figures, cur_figure):
 def add_point(x, y, colour="#000000"):
     if Point(x, y) not in cur_figure:
         if cur_figure:
-            #canvasField.create_line(cur_figure[-1].x, cur_figure[-1].y, x, y)
             draw_line_on_img(canvasImg, cur_figure[-1], Point(x, y), colour)
 
         index = findIndexForListPointScroll(all_figures, cur_figure)
@@ -172,7 +171,6 @@ def close_figure():
     else:
         messagebox.showwarning("Предупреждение!", "Такую фигуру нельзя замкнуть!\nНеобходимо как минимум, чтобы у фигуры было 3 точки!")
 
-#change
 def fill_all_figures():
     global LINE_COLOUR
     if not all_figures and not cur_figure:
