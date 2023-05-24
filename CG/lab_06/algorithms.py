@@ -47,27 +47,26 @@ def fill_with_seed(canvas, img, border_colour, fill_colour, seed_point, delay=Fa
         x = seed_pixel.x
         y = seed_pixel.y
 
-        draw_pixel(img, x, y, fill_colour)
         tx = x
         ty = y
 
         
         #right
-        x += 1
-        while img.get(x, y) != fill_colour_rgb and \
-              img.get(x, y) != border_colour_rgb and x < CANVAS_W:
-            draw_pixel(img, x, y, fill_colour)
-            x += 1
+        x_cur = x
+        while img.get(x_cur, y) != border_colour_rgb and \
+              x_cur <= CANVAS_W:
+            draw_pixel(img, x_cur, y, fill_colour)
+            x_cur += 1
 
-        xr = x - 1
+        xr = x_cur - 1
         #left
-        x = tx - 1
-        while img.get(x, y) != fill_colour_rgb and \
-              img.get(x, y) != border_colour_rgb and x > 0:
-            draw_pixel(img, x, y, fill_colour)
-            x -= 1
+        x_cur = x - 1
+        while img.get(x_cur, y) != border_colour_rgb and \
+              x_cur > 0:
+            draw_pixel(img, x_cur, y, fill_colour)
+            x_cur -= 1
 
-        xl = x + 1
+        xl = x_cur + 1
         #up
         x = xl
         if ty < CANVAS_H:
@@ -77,7 +76,8 @@ def fill_with_seed(canvas, img, border_colour, fill_colour, seed_point, delay=Fa
                 flag = False
 
                 while img.get(x, y) != fill_colour_rgb and \
-                      img.get(x, y) != border_colour_rgb and x <= xr:
+                      img.get(x, y) != border_colour_rgb and \
+                      x < xr:
                     flag = True
                     x += 1
 
@@ -99,7 +99,7 @@ def fill_with_seed(canvas, img, border_colour, fill_colour, seed_point, delay=Fa
                 x_in = x
                 while (img.get(x, y) == fill_colour_rgb or
                        img.get(x, y) == border_colour_rgb) and x < xr:
-                    x = x + 1
+                    x += 1
 
                 if x == x_in:
                     x += 1
@@ -111,7 +111,7 @@ def fill_with_seed(canvas, img, border_colour, fill_colour, seed_point, delay=Fa
             flag = False
 
             while img.get(x, y) != fill_colour_rgb and \
-                  img.get(x, y) != border_colour_rgb and x <= xr:
+                  img.get(x, y) != border_colour_rgb and x < xr:
                 flag = True
                 x += 1
 
