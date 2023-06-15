@@ -1,2 +1,5 @@
-﻿lab_07_1.obj : error LNK2019: ссылка на неразрешенный внешний символ _my_strcpy в функции _main
-C:\Users\danya\Desktop\bmstu_4th_sem\ASM\lab_07\lab_07_1\Debug\lab_07_1.exe : fatal error LNK1120: неразрешенных внешних элементов: 1
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: промежуточный каталог (Debug\) содержит файлы, которые используются совместно с другим проектом (lab_07_v1.vcxproj, test.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+  Assembling own_strcpy.asm...
+  main.cpp
+C:\Users\danya\Desktop\bmstu_4th_sem\ASM\lab_07\lab_07_1\main.cpp(25): warning C4405: str: идентификатор является зарезервированным словом
+  lab_07_1.vcxproj -> C:\Users\danya\Desktop\bmstu_4th_sem\ASM\lab_07\lab_07_1\Debug\lab_07_1.exe
