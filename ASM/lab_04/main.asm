@@ -265,6 +265,7 @@ change_matrix proc
 change_matrix endp
 
 main:        
+    mov cx, -1
     mov ax, DSEGMSG
     mov ds, ax 
     

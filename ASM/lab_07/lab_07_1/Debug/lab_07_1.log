@@ -1,5 +1,4 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: промежуточный каталог (Debug\) содержит файлы, которые используются совместно с другим проектом (lab_07_v1.vcxproj, test.vcxproj).  Это может привести к ошибкам очистки и перестроения.
-  Assembling own_strcpy.asm...
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(491,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (lab_07_v1.vcxproj, test.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   main.cpp
-C:\Users\danya\Desktop\bmstu_4th_sem\ASM\lab_07\lab_07_1\main.cpp(25): warning C4405: str: идентификатор является зарезервированным словом
+C:\Users\danya\Desktop\bmstu_4th_sem\ASM\lab_07\lab_07_1\main.cpp(25): warning C4405: 'str': identifier is reserved word
   lab_07_1.vcxproj -> C:\Users\danya\Desktop\bmstu_4th_sem\ASM\lab_07\lab_07_1\Debug\lab_07_1.exe

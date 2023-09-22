@@ -12,7 +12,7 @@ myStrcpy proc
 	cmp edi, esi
 	je exit
 
-not_equal:
+not_equal: ;строки не перекрываются
 	cmp edi, esi
 	jl copy
 
@@ -22,16 +22,16 @@ not_equal:
 	cmp eax, ecx
 	jge copy
 
-comp_copy:
-		add edi, ecx; ����������� � �����
+comp_copy: ;строки перекрываются
+		add edi, ecx; перемещение в конец строки
 		add esi, ecx
 		sub esi, 1
 		sub edi, 1
-		std; df = 1
+		std; df = 1 уменьшение инд регистров
 
 		copy:
-	rep movsb
-	cld; df = 0
+	rep movsb; из esi в edi пока df==0 длина==ecx
+	cld; df = 0 увеличение инд регистров (сброс флага)
 
 exit:
 	ret

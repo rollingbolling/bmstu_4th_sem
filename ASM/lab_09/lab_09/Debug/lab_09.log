@@ -1,0 +1,4 @@
+﻿  main.cpp
+C:\Users\danya\Desktop\lab_09\lab_09\main.cpp(118,43): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\danya\Desktop\lab_09\lab_09\main.cpp(119,41): warning C4305: 'initializing': truncation from 'double' to 'float'
+  lab_09.vcxproj -> C:\Users\danya\Desktop\lab_09\Debug\lab_09.exe

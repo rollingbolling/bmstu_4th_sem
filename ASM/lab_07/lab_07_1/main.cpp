@@ -36,7 +36,7 @@ size_t asm_strlen(const char* str) {
 
 int main()
 {
-    char str[100] = "Test strlen for lab_07 assambler!";
+    char str[100] = "Test strlen";
     printf("Test string: %s\n", str);
     int l = asm_strlen(str);
     cout << "asm_strlen: " << l << endl;
@@ -45,11 +45,11 @@ int main()
     l = strlen(str);
     cout << "strlen: " << l << endl;
 
-    char src[] = "test strcpy for lab_07 asm";
-    char dst[] = "test strcpy for lab_07 asm";
+    char src[] = "test strcpy";
+    char dst[] = "test strcpy";
     int len = asm_strlen(src);
 
-    printf("Test string: %s\n", src);
+    printf("\nTest string: %s\n", src);
     myStrcpy(dst, src, len);
     printf("Identic strings: %s\n", dst);
 
@@ -57,7 +57,7 @@ int main()
         * middle = before + 2,
         * after = middle + 2;
 
-    printf("String length = %d\n", len);
+    printf("\nString length = %d\n", len);
 
     myStrcpy(middle, src, len);
     printf("Coppied string: %s\n", middle);
@@ -65,7 +65,7 @@ int main()
     myStrcpy(before, middle, len);
     printf("Copy before pointer: %s\n", before);
 
-    myStrcpy(after, before, len);
+    myStrcpy(after, before, len+5);
     printf("Copy after pointer: %s\n", before);
 
 
